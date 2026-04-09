@@ -375,10 +375,10 @@
       if (resetFirst) { resetFirst = false; return; }
       const visible = get(visibleNodes);
       const defaults = computeDefaultPositions(visible.tasks, visible.devs, visible.agents, visible.subAgents);
-      board.update(b => ({ ...b, positions:defaults, zoom:{x:0,y:0,scale:1} }));
+      board.update(b => ({ ...b, positions:defaults }));
       localStorage.removeItem('aura-positions');
-      applyTransform();
       render(visible);
+      requestAnimationFrame(fitToScreen);
     }));
 
     unsubs.push(() => window.removeEventListener('resize', onResize));

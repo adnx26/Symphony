@@ -83,4 +83,20 @@ export const TASKS = [
     priority:'medium', dueDate:'2026-04-18',
     overview: 'Upgrade the production database from PostgreSQL 14 to 16 to gain access to logical replication improvements and security patches. Requires schema validation, pool reconfiguration, and a zero-downtime cutover plan.',
     criteria:['Migration script tested on staging clone','All queries validated against PG16 planner','Connection pool config updated for new defaults','Performance benchmarks match or exceed PG14 baseline','Zero-downtime cutover plan documented','Rollback to PG14 verified possible within 15 min'] },
+
+  // — Week of Apr 9 sprint —
+  { id:'t7', title:'Magic link auth system',     desc:'Passwordless login: token generation, email dispatch, JWT session', status:'todo', developerId:'d1', agentId:'a1', assigneeType:'dev', agentAssigned:true,
+    priority:'high', dueDate:'2026-04-13',
+    overview: 'Implement a passwordless magic link login flow. User submits their email, receives a time-limited signed token via email, clicks the link to exchange it for a JWT session stored in an httpOnly cookie. Kept separate from API auth middleware for now — the two will be merged in a later sprint.',
+    criteria:['POST /auth/magic-link generates & stores a signed token (15 min TTL)','Email dispatched with link containing token','GET /auth/verify validates token, sets httpOnly JWT cookie (7-day)','GET /auth/me returns authenticated user profile and role','POST /auth/logout clears cookie and invalidates server-side token','Token is single-use — replay attempt returns 401','No user enumeration: /magic-link always responds 200'] },
+
+  { id:'t8', title:'REST API — core routes',     desc:'SvelteKit API routes for tasks, developers, agents, sub-agents', status:'todo', developerId:'d1', agentId:'a1', assigneeType:'dev', agentAssigned:true,
+    priority:'high', dueDate:'2026-04-13',
+    overview: 'Scaffold the full SvelteKit API route structure under /api/v1/ and implement CRUD endpoints for all four entity types (tasks, developers, agents, sub-agents) plus the graph and search endpoints. Auth middleware hooks will be stubbed — wired up once the login workstream is complete.',
+    criteria:['Route files created for all endpoints in API_DESIGN.md','GET /tasks supports status, priority, developerId, agentId filters','POST/PATCH/DELETE working for tasks, developers, agents, sub-agents','GET /graph returns nodes + edges matching current data.js logic','GET /search?q= queries across name and desc fields','All routes return consistent { data, meta, error } envelope','Permission stubs in place — enforced after auth merge'] },
+
+  { id:'t9', title:'Role-based permission layer', desc:'Admin / Manager / Developer / Viewer middleware on all API routes', status:'todo', developerId:'d1', agentId:'a1', assigneeType:'dev', agentAssigned:false,
+    priority:'medium', dueDate:'2026-04-18',
+    overview: 'Implement the two-step middleware chain (requireAuth → requireRole) across all API routes per the permission matrix in API_DESIGN.md. This task begins once both the login and core API workstreams are complete — it is the merge point that locks down the API behind real user sessions.',
+    criteria:['requireAuth middleware validates JWT cookie on all protected routes','requireRole middleware enforces permission matrix per endpoint','Managers: create/edit/assign tasks and agents only','Developers: update status on own tasks only','Viewers: read-only on all routes','Admins: full access including user role management','401 returned for unauthenticated, 403 for insufficient role','PATCH /users/:id/role (admin only) implemented'] },
 ];

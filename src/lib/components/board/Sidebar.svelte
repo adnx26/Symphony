@@ -43,11 +43,23 @@
 </script>
 
 <div
+<<<<<<< Updated upstream
   class="relative flex-shrink-0 bg-aura-surface border-r border-white/[0.065] flex flex-col transition-[width] duration-[280ms] z-10"
   style="width:{visible?'200px':'0'};overflow:visible"
 >
   <!-- Tree content -->
   <div class="flex-1 py-2 overflow-y-auto overflow-x-hidden" style="scrollbar-width:thin">
+=======
+  class="relative flex-shrink-0 flex flex-col transition-[width] duration-[280ms] z-10"
+  style="width:{visible?'clamp(228px,22vw,268px)':'0'};overflow:visible;background:transparent;"
+>
+  <!-- Tree content -->
+  <div class="px-4 pt-4 pb-3">
+    <div class="font-syne text-[.7rem] font-bold uppercase tracking-[.18em] text-slate-500 px-1">Structure View</div>
+  </div>
+
+  <div class="flex-1 py-4 overflow-y-auto overflow-x-hidden" style="scrollbar-width:thin">
+>>>>>>> Stashed changes
     {#each tree as { task, dev, agent, subs, taskKey, devKey, agentKey }}
       <!-- Task row -->
       <div
@@ -127,7 +139,11 @@
 
   <!-- Collapse toggle -->
   <button
+<<<<<<< Updated upstream
     class="absolute -right-[18px] top-1/2 -translate-y-1/2 w-[18px] h-10 bg-aura-surface border border-white/[0.065] border-l-0 rounded-r-[5px] flex items-center justify-center cursor-pointer text-aura-muted text-[.75rem] z-[11] hover:text-aura-text hover:bg-aura-surface2 select-none transition-colors"
+=======
+    class="absolute -right-[22px] top-1/2 -translate-y-1/2 w-[22px] h-14 flex items-center justify-center cursor-pointer text-slate-600 text-[.9rem] z-[11] hover:text-slate-300 select-none transition-colors"
+>>>>>>> Stashed changes
     on:click={() => visible = !visible}
   >{visible ? '‹' : '›'}</button>
 </div>
