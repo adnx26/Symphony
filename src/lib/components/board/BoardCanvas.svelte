@@ -5,7 +5,6 @@
   import { activeId } from '$lib/stores/activeId.js';
   import { openPanel, closePanel } from '$lib/stores/panel.js';
   import { board, panTarget, resetSignal } from '$lib/stores/board.js';
-  import { activityByDev, startActivityPolling, stopActivityPolling, getStatusMeta } from '$lib/stores/activity.js';
   import {
     NODE_W, NODE_H, STATUS_LABEL,
     LANE_LABELS, LANE_COLORS,
@@ -42,50 +41,6 @@
     boardEl.style.transform = `translate(${zoom.x}px,${zoom.y}px) scale(${zoom.scale})`;
   }
 
-  // ── Live activity badge helpers ─────────────────────────────────────
-  function buildLiveBadge(entry) {
-    const meta = getStatusMeta(entry);
-    if (!meta || meta.color === 'live-idle') return '';
-
-    const agentPills = (entry?.activeAgents || [])
-      .map(a => `<span class="live-agent-pill">${a.slice(0, 28)}</span>`)
-      .join('');
-
-    const taskLine = entry?.currentTask
-      ? `<div class="live-task">${entry.currentTask.slice(0, 60)}${entry.currentTask.length > 60 ? '…' : ''}</div>`
-      : '';
-
-    return `<div class="live-status ${meta.color}">
-      <span class="live-dot"></span>
-      <span class="live-label">${meta.label}</span>
-      ${agentPills}
-      ${taskLine}
-    </div>`;
-  }
-
-  // Called on activity store updates — patches badges in-place without re-rendering nodes
-  function refreshLiveBadges($activityByDev) {
-    if (!boardEl) return;
-    boardEl.querySelectorAll('.dev-node').forEach(el => {
-      const nid = el.dataset.nid;
-      // Find developer name from the visible nodes
-      const devName = el.querySelector('.node-title')?.textContent?.trim();
-      if (!devName) return;
-      const entry = $activityByDev[devName];
-
-      const existing = el.querySelector('.live-status');
-      const newHtml = buildLiveBadge(entry);
-
-      if (newHtml && !existing) {
-        el.insertAdjacentHTML('beforeend', newHtml);
-      } else if (newHtml && existing) {
-        existing.outerHTML = newHtml;
-      } else if (!newHtml && existing) {
-        existing.remove();
-      }
-    });
-  }
-
   function render(visible) {
     if (!boardEl || !svgEl) return;
     const { tasks, devs, agents, subAgents, edges, taskColor } = visible;
@@ -120,11 +75,9 @@
         taskColor[t.id], pos);
     });
 
-    const $activityByDev = get(activityByDev);
     devs.forEach(d => {
-      const actEntry = $activityByDev[d.name];
       addNode(d, 'dev-node',
-        `<div class="node-row"><span class="avatar" style="background:#1a3d4a;color:#1dd4ef">${d.initials}</span><div class="node-title" style="margin:0">${d.name}</div></div><div class="node-sub" style="margin-top:4px">${d.role}</div>${buildLiveBadge(actEntry)}`,
+        `<div class="node-row"><span class="avatar" style="background:#1a3d4a;color:#1dd4ef">${d.initials}</span><div class="node-title" style="margin:0">${d.name}</div></div><div class="node-sub" style="margin-top:4px">${d.role}</div>`,
         null, pos);
     });
 
@@ -355,9 +308,6 @@
     // Store subscriptions
     unsubs.push(visibleNodes.subscribe(v => render(v)));
     unsubs.push(activeId.subscribe(() => applyHighlight()));
-    // Activity polling — updates badges without re-rendering nodes
-    startActivityPolling();
-    unsubs.push(activityByDev.subscribe(map => refreshLiveBadges(map)));
     unsubs.push(panTarget.subscribe(id => {
       if (!id) return;
       const pos = get(board).positions[id];
@@ -388,7 +338,6 @@
   });
 
   onDestroy(() => {
-    stopActivityPolling();
     unsubs.forEach(u => u());
   });
 
