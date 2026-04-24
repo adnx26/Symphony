@@ -1,27 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, ChevronLeft, Trash2, Play, Loader2, Bot, Sparkles, ChevronDown, ChevronUp, Plus } from 'lucide-react';
+import { X, ChevronLeft, Trash2, Plus } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useApp } from '../context/AppContext';
 import { getNodeColor, getStatusColor, getPriorityColor } from '../utils/nodeColors';
-import { useAgentDispatch } from '../agent/useAgentDispatch';
-import { AgentDispatchState, StatusType, PriorityType } from '../types';
+import { StatusType, PriorityType } from '../types';
 import { CommentThread } from './CommentThread';
 import { ActivityFeed } from './ActivityFeed';
-import { timeAgo } from '../utils/timeAgo';
 
-type TaskTab = 'overview' | 'criteria' | 'comments' | 'activity' | 'agent';
+type TaskTab = 'overview' | 'criteria' | 'comments' | 'activity';
 
 const TABS: { id: TaskTab; label: string }[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'criteria', label: 'Criteria' },
   { id: 'comments', label: 'Comments' },
   { id: 'activity', label: 'Activity' },
-  { id: 'agent', label: 'Agent' },
 ];
-
-const PROXY_URL = import.meta.env.DEV
-  ? 'http://localhost:3001/api/agent/analyze'
-  : '/api/agent/analyze';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -62,52 +55,6 @@ function fieldSelect(
   );
 }
 
-// ── Dispatch result ───────────────────────────────────────────────────────────
-
-function DispatchResultView({ d }: { d: AgentDispatchState }) {
-  const { result } = d;
-  if (!result) return null;
-  const isOk = result.status === 'completed';
-  const entries = Object.entries(result.output).slice(0, 5);
-  return (
-    <div
-      className="mt-3 p-3 space-y-2"
-      style={{
-        background: '#fafafa',
-        border: '1px solid #e4e4e7',
-        borderRadius: '4px',
-      }}
-    >
-      <div className="flex items-center justify-between">
-        <span
-          className="text-[0.65rem] font-semibold px-1.5 py-0.5"
-          style={{
-            background: isOk ? '#f0fdf4' : '#fff1f2',
-            color: isOk ? '#15803d' : '#be123c',
-            borderRadius: '3px',
-          }}
-        >
-          {isOk ? 'Completed' : 'Failed'}
-        </span>
-        <span className="text-[0.6rem]" style={{ color: '#a1a1aa' }}>{timeAgo(result.completedAt)}</span>
-      </div>
-      {result.error && (
-        <p className="text-xs" style={{ color: '#be123c' }}>{result.error}</p>
-      )}
-      {entries.length > 0 && (
-        <dl className="space-y-1">
-          {entries.map(([key, val]) => (
-            <div key={key} className="flex gap-1">
-              <dt className="text-[0.65rem] shrink-0" style={{ color: '#a1a1aa' }}>{key}:</dt>
-              <dd className="text-[0.65rem] truncate" style={{ color: '#3f3f46' }}>{String(val)}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
-    </div>
-  );
-}
-
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function DetailPanel() {
@@ -122,8 +69,6 @@ export function DetailPanel() {
     allTasks,
     deleteTask,
     developers,
-    agents,
-    subAgents,
     epics,
     stories,
     sprints,
@@ -131,10 +76,7 @@ export function DetailPanel() {
     addTaskToSprint,
     removeTaskFromSprint,
     updateTask,
-    getTaskDispatches,
-    agentTouchedIds,
   } = ctx;
-  const { dispatchAgent } = useAgentDispatch();
 
   const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TaskTab>('overview');
@@ -148,11 +90,6 @@ export function DetailPanel() {
   const [addingLabel, setAddingLabel] = useState(false);
   const [labelDraft, setLabelDraft] = useState('');
 
-  // AI insight
-  const [insightLoading, setInsightLoading] = useState(false);
-  const [insightText, setInsightText] = useState<string | null>(null);
-  const [insightOpen, setInsightOpen] = useState(false);
-
   // Reset tab when panel entry changes
   const lastEntryId = useRef<string | null>(null);
   useEffect(() => {
@@ -160,8 +97,6 @@ export function DetailPanel() {
     if (entry && entry.id !== lastEntryId.current) {
       lastEntryId.current = entry.id;
       setActiveTab('overview');
-      setInsightText(null);
-      setInsightOpen(false);
       setEditingTitle(false);
     }
   }, [panelStack]);
@@ -213,8 +148,7 @@ export function DetailPanel() {
       if (newSprintId) addTaskToSprint(newSprintId, task.id);
     };
 
-    const handleEpicChange = (epicId: string) => {
-      // Clear story when epic changes
+    const handleEpicChange = (_epicId: string) => {
       save({ storyId: undefined });
     };
 
@@ -238,57 +172,6 @@ export function DetailPanel() {
       setLabelDraft('');
       setAddingLabel(false);
     };
-
-    // AI insight
-    const getInsight = async () => {
-      setInsightLoading(true);
-      setInsightText(null);
-      setInsightOpen(true);
-      try {
-        const prompt = `You are an AI project assistant. Analyze this task and provide a brief insight (2-3 sentences) and one concrete recommendation.
-
-Task: ${task.title}
-Description: ${task.desc ?? ''}
-Status: ${task.status}
-Priority: ${task.priority}
-Due Date: ${task.dueDate ?? 'None'}
-Story Points: ${task.storyPoints ?? 'None'}
-Assignee: ${developers.find((d) => d.id === task.developerId)?.name ?? 'Unassigned'}
-Criteria: ${(task.criteria ?? []).join('; ') || 'None'}
-
-Return a JSON object with exactly this shape:
-{"insight": "<2-3 sentence analysis>", "recommendation": "<one concrete action>"}
-Return ONLY the JSON object. No markdown, no code fences.`;
-
-        const res = await fetch(PROXY_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt }),
-        });
-        if (!res.ok) throw new Error('API error');
-        const { text } = (await res.json()) as { text: string };
-        const parsed = JSON.parse(text) as { insight?: string; recommendation?: string };
-        const insight = parsed.insight ?? '';
-        const recommendation = parsed.recommendation ?? '';
-        if (!insight && !recommendation) throw new Error('Empty insight response');
-        setInsightText([insight, recommendation ? `Recommendation: ${recommendation}` : ''].filter(Boolean).join('\n\n'));
-      } catch {
-        setInsightText('Could not load AI insight. Please try again.');
-      } finally {
-        setInsightLoading(false);
-      }
-    };
-
-    // Agent dispatch for this task
-    const taskDispatches = getTaskDispatches(task.id);
-    const latestDispatch = [...taskDispatches].sort(
-      (a, b) =>
-        new Date(b.request.dispatchedAt).getTime() -
-        new Date(a.request.dispatchedAt).getTime()
-    )[0];
-    const isRunning =
-      latestDispatch?.status === 'dispatched' || latestDispatch?.status === 'running';
-    const assignedAgent = task.agentId ? agents.find((a) => a.id === task.agentId) : null;
 
     return (
       <>
@@ -797,191 +680,26 @@ Return ONLY the JSON object. No markdown, no code fences.`;
               <ActivityFeed taskId={task.id} />
             )}
 
-            {/* ── AGENT TAB ── */}
-            {activeTab === 'agent' && (
-              <div className="space-y-5">
-                {/* Agent-touched badge */}
-                {agentTouchedIds.has(task.id) && (
-                  <div
-                    className="flex items-center gap-2 px-3 py-2 rounded"
-                    style={{
-                      background: 'rgba(124, 58, 237, 0.07)',
-                      border: '1px solid rgba(124, 58, 237, 0.2)',
-                    }}
-                  >
-                    <Bot className="w-3.5 h-3.5" style={{ color: '#7c3aed' }} />
-                    <span className="text-xs font-medium" style={{ color: '#7c3aed' }}>
-                      Agent has touched this task
-                    </span>
-                  </div>
-                )}
-
-                {/* Dispatch section */}
-                <div>
-                  <p
-                    className="text-[0.65rem] font-semibold uppercase tracking-wide mb-3"
-                    style={{ color: '#a1a1aa' }}
-                  >
-                    Agent Dispatch
-                  </p>
-                  {assignedAgent ? (
-                    <>
-                      <div
-                        className="p-3 mb-3"
-                        style={{
-                          background: '#fafafa',
-                          border: '1px solid #e4e4e7',
-                          borderRadius: '4px',
-                        }}
-                      >
-                        <p
-                          className="text-[0.65rem] font-semibold uppercase tracking-wide mb-1"
-                          style={{ color: '#a1a1aa' }}
-                        >
-                          Assigned Agent
-                        </p>
-                        <button
-                          onClick={() => drillPanel({ mode: 'agent', id: assignedAgent.id })}
-                          className="text-xs font-medium hover:underline text-left"
-                          style={{ color: '#7c3aed' }}
-                        >
-                          {assignedAgent.name}
-                        </button>
-                        <p className="text-xs mt-0.5" style={{ color: '#71717a' }}>
-                          {assignedAgent.type}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => dispatchAgent(assignedAgent.id, task.id)}
-                        disabled={isRunning}
-                        className="flex items-center justify-center gap-2 w-full py-2 text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{
-                          background: 'rgba(124, 58, 237, 0.07)',
-                          border: '1px solid rgba(124, 58, 237, 0.3)',
-                          color: '#7c3aed',
-                          borderRadius: '4px',
-                        }}
-                      >
-                        {isRunning ? (
-                          <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            Running…
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-3.5 h-3.5" />
-                            Run Agent
-                          </>
-                        )}
-                      </button>
-                      {latestDispatch && <DispatchResultView d={latestDispatch} />}
-                    </>
-                  ) : (
-                    <p className="text-xs" style={{ color: '#a1a1aa' }}>
-                      No agent assigned to this task. Assign one in the Overview tab.
-                    </p>
-                  )}
-                </div>
-
-                {/* AI Insight */}
-                <div style={{ borderTop: '1px solid #e4e4e7', paddingTop: '16px' }}>
-                  <div className="flex items-center justify-between mb-3">
-                    <p
-                      className="text-[0.65rem] font-semibold uppercase tracking-wide"
-                      style={{ color: '#a1a1aa' }}
-                    >
-                      AI Insight
-                    </p>
-                    {insightText && (
-                      <button
-                        onClick={() => setInsightOpen((v) => !v)}
-                        className="p-1 rounded transition-colors"
-                        style={{ color: '#a1a1aa' }}
-                      >
-                        {insightOpen ? (
-                          <ChevronUp className="w-3.5 h-3.5" />
-                        ) : (
-                          <ChevronDown className="w-3.5 h-3.5" />
-                        )}
-                      </button>
-                    )}
-                  </div>
-                  <button
-                    onClick={getInsight}
-                    disabled={insightLoading}
-                    className="flex items-center justify-center gap-2 w-full py-2 text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{
-                      background: insightLoading ? '#f4f4f5' : 'rgba(217, 119, 6, 0.07)',
-                      border: '1px solid rgba(217, 119, 6, 0.3)',
-                      color: '#d97706',
-                      borderRadius: '4px',
-                    }}
-                  >
-                    {insightLoading ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        Analyzing…
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Get AI Insight
-                      </>
-                    )}
-                  </button>
-
-                  {insightText && insightOpen && (
-                    <div
-                      className="mt-3 p-3 space-y-2"
-                      style={{
-                        background: '#fffbeb',
-                        border: '1px solid #fde68a',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      {insightText.split('\n\n').map((para, i) => (
-                        <p
-                          key={i}
-                          className="text-xs leading-relaxed"
-                          style={{ color: '#78350f' }}
-                        >
-                          {para}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         </motion.div>
       </>
     );
   }
 
-  // ── Agent mode (unchanged) ────────────────────────────────────────────────
+  // ── Developer mode ────────────────────────────────────────────────────────
 
   if (entry.mode === 'agent') {
     const dev = developers.find((d) => d.id === entry.id);
-    const agent = agents.find((a) => a.id === entry.id);
-    const subAgent = subAgents.find((sa) => sa.id === entry.id);
 
-    const node = dev || agent || subAgent;
+    const node = dev;
     if (!node) return null;
 
-    let nodeType: 'developer' | 'agent' | 'sub-agent' = 'agent';
-    let nodeTypeLabel = 'Agent';
-    if (dev) {
-      nodeType = 'developer';
-      nodeTypeLabel = 'Developer';
-    } else if (subAgent) {
-      nodeType = 'sub-agent';
-      nodeTypeLabel = 'Sub-Agent';
-    }
+    const nodeType: 'developer' = 'developer';
+    const nodeTypeLabel = 'Developer';
 
     const color = getNodeColor(nodeType);
-    const isAgentNode = agent || subAgent;
-    const { checkedCriteria: cc, toggleCriterion: tc, getTaskDispatches: gtd } = ctx;
+    const isAgentNode = false;
+    const { checkedCriteria: cc, toggleCriterion: tc } = ctx;
 
     return (
       <motion.div
@@ -1032,11 +750,6 @@ Return ONLY the JSON object. No markdown, no code fences.`;
             </button>
           </div>
           <h2 className="text-base font-semibold mb-1" style={{ color: '#0f0f0f' }}>{node.name}</h2>
-          {isAgentNode && (
-            <p className="text-xs" style={{ color: '#71717a' }}>
-              {agent ? agent.type : subAgent?.type}
-            </p>
-          )}
           {dev && <p className="text-xs" style={{ color: '#71717a' }}>{dev.role}</p>}
         </div>
 
@@ -1104,56 +817,6 @@ Return ONLY the JSON object. No markdown, no code fences.`;
             </div>
           )}
 
-          {/* Agent Dispatch */}
-          {agent && (() => {
-            const agentTask = allTasks.find(t => t.agentId === agent.id && t.status === 'progress')
-              ?? allTasks.find(t => t.agentId === agent.id);
-            const taskDispatches = agentTask ? gtd(agentTask.id) : [];
-            const latestDispatch = [...taskDispatches].sort(
-              (a, b) => new Date(b.request.dispatchedAt).getTime() - new Date(a.request.dispatchedAt).getTime()
-            )[0];
-            const isRunning = latestDispatch?.status === 'dispatched' || latestDispatch?.status === 'running';
-            return (
-              <div className="pt-2" style={{ borderTop: '1px solid #e4e4e7' }}>
-                <p className="text-[0.65rem] font-semibold uppercase tracking-wide mb-3" style={{ color: '#a1a1aa' }}>
-                  Agent Dispatch
-                </p>
-                {agentTask ? (
-                  <>
-                    <p className="text-xs mb-3" style={{ color: '#71717a' }}>
-                      Task: <span style={{ color: '#3f3f46', fontWeight: 500 }}>{agentTask.title}</span>
-                    </p>
-                    <button
-                      onClick={() => dispatchAgent(agent.id, agentTask.id)}
-                      disabled={isRunning}
-                      className="flex items-center justify-center gap-2 w-full py-2 text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{
-                        background: color.bg,
-                        border: `1px solid ${color.accent}40`,
-                        color: color.accent,
-                        borderRadius: '4px',
-                      }}
-                    >
-                      {isRunning ? (
-                        <>
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          Running...
-                        </>
-                      ) : (
-                        <>
-                          <Play className="w-3.5 h-3.5" />
-                          Run Agent
-                        </>
-                      )}
-                    </button>
-                    {latestDispatch && <DispatchResultView d={latestDispatch} />}
-                  </>
-                ) : (
-                  <p className="text-xs" style={{ color: '#a1a1aa' }}>No task assigned to this agent.</p>
-                )}
-              </div>
-            );
-          })()}
         </div>
       </motion.div>
     );

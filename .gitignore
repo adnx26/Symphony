@@ -48,3 +48,6 @@ dist-server
 
 # Skills lock (local tooling config)
 skills-lock.json
+
+# Claude plugin runtime state
+plugin/.session-state.json

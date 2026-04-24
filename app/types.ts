@@ -1,4 +1,4 @@
-export type NodeType = 'task' | 'developer' | 'agent' | 'sub-agent';
+export type NodeType = 'task' | 'developer';
 export type StatusType = 'todo' | 'progress' | 'done' | 'blocked';
 export type PriorityType = 'low' | 'medium' | 'high' | 'critical';
 
@@ -8,16 +8,12 @@ export interface AppTask {
   desc: string;
   status: StatusType;
   developerId: string;
-  agentId?: string;
-  assigneeType: 'dev' | 'agent';
-  agentAssigned?: boolean;
   priority: PriorityType;
   dueDate?: string;
   overview?: string;
   criteria?: string[];
   isCustom?: boolean;
   blockerReason?: string;
-  // Epic/Story hierarchy
   storyId?: string;
   storyPoints?: number;
   labels?: string[];
@@ -81,23 +77,14 @@ export interface AppSubAgent {
   status?: 'active' | 'idle';
 }
 
-export interface AgentAction {
-  type: string;
-  payload: Record<string, unknown>;
-  timestamp: string;
-  agentId?: string;
-  outcome?: 'applied' | 'dismissed';
-}
-
 export interface FilterState {
   dev: string;
-  type: string;
   status: string;
   priority: string;
 }
 
 export interface PanelEntry {
-  mode: 'task' | 'agent';
+  mode: 'task';
   id: string;
 }
 
@@ -130,79 +117,6 @@ export interface TreeNode {
   children?: TreeNode[];
 }
 
-export type AgentDispatchStatus =
-  | 'idle'
-  | 'dispatched'
-  | 'running'
-  | 'completed'
-  | 'failed';
-
-export interface AgentDispatchRequest {
-  dispatchId: string;
-  agentId: string;
-  taskId: string;
-  input: Record<string, unknown>;
-  dispatchedAt: string;
-}
-
-export interface AgentDispatchResult {
-  dispatchId: string;
-  agentId: string;
-  taskId: string;
-  status: 'completed' | 'failed';
-  output: Record<string, unknown>;
-  completedAt: string;
-  error?: string;
-}
-
-export interface AgentDispatchState {
-  request: AgentDispatchRequest;
-  status: AgentDispatchStatus;
-  result?: AgentDispatchResult;
-}
-
-export interface SetupTask {
-  title: string;
-  desc: string;
-  status: StatusType;
-  priority: PriorityType;
-  dueDate?: string;
-  criteria?: string[];
-  developerId?: string;
-  agentId?: string;
-}
-
-export interface SetupDeveloper {
-  id: string;
-  name: string;
-  initials: string;
-  role: string;
-  desc?: string;
-}
-
-export interface SetupAgent {
-  id: string;
-  name: string;
-  type: string;
-  developerId: string;
-  desc?: string;
-}
-
-export interface SetupSubAgent {
-  id: string;
-  name: string;
-  type: string;
-  parentId: string;
-  desc?: string;
-}
-
-export interface ProjectSetupData {
-  tasks: SetupTask[];
-  developers?: SetupDeveloper[];
-  agents?: SetupAgent[];
-  subAgents?: SetupSubAgent[];
-}
-
 export interface AppSprint {
   id: string;
   projectId: string;
@@ -211,7 +125,7 @@ export interface AppSprint {
   status: 'planned' | 'active' | 'completed';
   startDate?: string;
   endDate?: string;
-  capacity: number;         // story points
+  capacity: number;
   createdAt?: string;
 }
 
@@ -219,7 +133,7 @@ export interface TaskComment {
   id: string;
   taskId: string;
   projectId: string;
-  author: string;           // 'user' | agent id | 'orchestrator'
+  author: string;
   authorType: 'user' | 'agent';
   body: string;
   createdAt: string;
@@ -231,8 +145,18 @@ export interface TaskActivity {
   taskId: string;
   projectId: string;
   eventType: 'status_changed' | 'priority_changed' | 'assigned' | 'agent_action' | 'comment_added' | 'criteria_checked' | 'sprint_added' | 'blocker_set' | 'blocker_resolved';
-  actor: string;            // 'user' | agent id | 'orchestrator'
+  actor: string;
   actorType: 'user' | 'agent';
-  payload: Record<string, unknown>;   // {from, to} for changes
+  payload: Record<string, unknown>;
   createdAt: string;
+}
+
+export interface ClaudeEvent {
+  id: string;
+  session_id: string;
+  phase: 'exploring' | 'implementing' | 'running' | 'debugging' | 'waiting' | 'communicating' | 'ended';
+  tool_name: string | null;
+  summary: string;
+  task_id: string | null;
+  created_at: string;
 }

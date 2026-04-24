@@ -27,8 +27,6 @@ export function Sidebar() {
   const handleNodeClick = (node: TreeNode) => {
     if (node.type === 'task') {
       openPanel({ mode: 'task', id: node.id });
-    } else {
-      openPanel({ mode: 'agent', id: node.id });
     }
     setPanTarget(node.id);
   };

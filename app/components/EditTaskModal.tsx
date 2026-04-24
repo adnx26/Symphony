@@ -23,7 +23,7 @@ const PRIORITY_OPTIONS: { value: PriorityType; label: string }[] = [
 ];
 
 export function EditTaskModal({ task, onClose }: EditTaskModalProps) {
-  const { updateTask, developers, agents, stories } = useApp();
+  const { updateTask, developers, stories } = useApp();
 
   const [form, setForm] = useState({
     title: task.title,
@@ -33,8 +33,6 @@ export function EditTaskModal({ task, onClose }: EditTaskModalProps) {
     priority: task.priority,
     dueDate: task.dueDate ?? '',
     developerId: task.developerId,
-    agentId: task.agentId ?? '',
-    assigneeType: task.assigneeType,
     storyId: task.storyId ?? '',
     storyPoints: task.storyPoints ?? 0,
     labelsRaw: (task.labels ?? []).join(', '),
@@ -75,9 +73,6 @@ export function EditTaskModal({ task, onClose }: EditTaskModalProps) {
       priority: form.priority,
       dueDate: form.dueDate || undefined,
       developerId: form.developerId,
-      agentId: form.agentId || undefined,
-      assigneeType: form.assigneeType,
-      agentAssigned: !!form.agentId,
       criteria: criteria.length > 0 ? criteria : undefined,
       storyId: form.storyId || undefined,
       storyPoints: Number(form.storyPoints) || 0,
@@ -187,23 +182,6 @@ export function EditTaskModal({ task, onClose }: EditTaskModalProps) {
               ))}
             </select>
           </Field>
-
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Agent">
-              <select value={form.agentId} onChange={(e) => set('agentId', e.target.value)} className="modal-input">
-                <option value="">None</option>
-                {agents.map((a) => (
-                  <option key={a.id} value={a.id}>{a.name}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Owner">
-              <select value={form.assigneeType} onChange={(e) => set('assigneeType', e.target.value)} className="modal-input">
-                <option value="dev">Developer</option>
-                <option value="agent">Agent</option>
-              </select>
-            </Field>
-          </div>
 
           <Field label="Story">
             <select value={form.storyId} onChange={(e) => set('storyId', e.target.value)} className="modal-input">

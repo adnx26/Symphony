@@ -23,7 +23,7 @@ const PRIORITY_OPTIONS: { value: PriorityType; label: string }[] = [
 ];
 
 export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
-  const { addTask, developers, agents } = useApp();
+  const { addTask, developers } = useApp();
 
   const [form, setForm] = useState({
     title: '',
@@ -32,8 +32,6 @@ export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
     priority: 'medium' as PriorityType,
     dueDate: '',
     developerId: '',
-    agentId: '',
-    assigneeType: 'dev' as 'dev' | 'agent',
   });
 
   const set = (key: string, value: string) =>
@@ -50,9 +48,6 @@ export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
       priority: form.priority,
       dueDate: form.dueDate || undefined,
       developerId: form.developerId,
-      agentId: form.agentId || undefined,
-      assigneeType: form.assigneeType,
-      agentAssigned: !!form.agentId,
       storyId: storyId || undefined,
     };
 
@@ -150,22 +145,6 @@ export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
             </select>
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Agent">
-              <select value={form.agentId} onChange={(e) => set('agentId', e.target.value)} className="modal-input">
-                <option value="">None</option>
-                {agents.map((a) => (
-                  <option key={a.id} value={a.id}>{a.name}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Owner">
-              <select value={form.assigneeType} onChange={(e) => set('assigneeType', e.target.value)} className="modal-input">
-                <option value="dev">Developer</option>
-                <option value="agent">Agent</option>
-              </select>
-            </Field>
-          </div>
         </div>
 
         {/* Footer */}

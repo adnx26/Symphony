@@ -5,13 +5,9 @@
 import {
   AppTask,
   AppDeveloper,
-  AppAgent,
-  AppSubAgent,
   StatusType,
   PriorityType,
 } from '../types';
-
-// ── Task mutations ────────────────────────────────────────────────────────────
 
 export function updateTaskStatus(
   tasks: AppTask[],
@@ -37,19 +33,7 @@ export function assignTaskToDeveloper(
   developerId: string
 ): AppTask[] {
   return tasks.map((t) =>
-    t.id === taskId ? { ...t, developerId, assigneeType: 'dev' as const } : t
-  );
-}
-
-export function assignTaskToAgent(
-  tasks: AppTask[],
-  taskId: string,
-  agentId: string
-): AppTask[] {
-  return tasks.map((t) =>
-    t.id === taskId
-      ? { ...t, agentId, agentAssigned: true, assigneeType: 'agent' as const }
-      : t
+    t.id === taskId ? { ...t, developerId } : t
   );
 }
 
@@ -58,7 +42,9 @@ export function updateTaskPriority(
   taskId: string,
   priority: PriorityType
 ): AppTask[] {
-  return tasks.map((t) => (t.id === taskId ? { ...t, priority } : t));
+  return tasks.map((t) =>
+    t.id === taskId ? { ...t, priority } : t
+  );
 }
 
 export function updateTaskDueDate(
@@ -66,42 +52,10 @@ export function updateTaskDueDate(
   taskId: string,
   dueDate: string
 ): AppTask[] {
-  return tasks.map((t) => (t.id === taskId ? { ...t, dueDate } : t));
-}
-
-export function checkCriterion(
-  checkedCriteria: Record<string, boolean>,
-  taskId: string,
-  criterionIndex: number,
-  checked: boolean
-): Record<string, boolean> {
-  const key = `${taskId}-${criterionIndex}`;
-  return { ...checkedCriteria, [key]: checked };
-}
-
-// ── Agent mutations ───────────────────────────────────────────────────────────
-
-export function reassignAgent(
-  agents: AppAgent[],
-  agentId: string,
-  newDeveloperId: string
-): AppAgent[] {
-  return agents.map((a) =>
-    a.id === agentId ? { ...a, developerId: newDeveloperId } : a
+  return tasks.map((t) =>
+    t.id === taskId ? { ...t, dueDate } : t
   );
 }
-
-export function setSubAgentStatus(
-  subAgents: AppSubAgent[],
-  subAgentId: string,
-  status: 'active' | 'idle'
-): AppSubAgent[] {
-  return subAgents.map((sa) =>
-    sa.id === subAgentId ? { ...sa, status } : sa
-  );
-}
-
-// ── Read queries ──────────────────────────────────────────────────────────────
 
 export function getBlockedTasks(tasks: AppTask[]): AppTask[] {
   return tasks.filter((t) => t.status === 'blocked');
@@ -109,7 +63,7 @@ export function getBlockedTasks(tasks: AppTask[]): AppTask[] {
 
 export function getOverdueTasks(tasks: AppTask[], today: string): AppTask[] {
   return tasks.filter(
-    (t) => t.dueDate !== undefined && t.dueDate < today && t.status !== 'done'
+    (t) => t.dueDate && t.dueDate < today && t.status !== 'done'
   );
 }
 
@@ -124,46 +78,19 @@ export function getDeveloperWorkload(
     done: 0,
     blocked: 0,
   };
-  for (const t of devTasks) {
-    byStatus[t.status]++;
-  }
+  devTasks.forEach((t) => {
+    byStatus[t.status] = (byStatus[t.status] ?? 0) + 1;
+  });
   return { total: devTasks.length, byStatus };
-}
-
-export function getTaskChain(
-  taskId: string,
-  tasks: AppTask[],
-  developers: AppDeveloper[],
-  agents: AppAgent[],
-  subAgents: AppSubAgent[]
-): {
-  task: AppTask | undefined;
-  developer: AppDeveloper | undefined;
-  agent: AppAgent | undefined;
-  subAgents: AppSubAgent[];
-} {
-  const task = tasks.find((t) => t.id === taskId);
-  const developer = task
-    ? developers.find((d) => d.id === task.developerId)
-    : undefined;
-  const agent =
-    task?.agentId ? agents.find((a) => a.id === task.agentId) : undefined;
-  const chainSubAgents = agent
-    ? subAgents.filter((sa) => sa.parentId === agent.id)
-    : [];
-  return { task, developer, agent, subAgents: chainSubAgents };
 }
 
 export function getCriteriaCompletion(
   task: AppTask,
   checkedCriteria: Record<string, boolean>
 ): { checked: number; total: number; percent: number } {
-  const total = task.criteria?.length ?? 0;
+  const criteria = task.criteria ?? [];
+  const total = criteria.length;
   if (total === 0) return { checked: 0, total: 0, percent: 0 };
-  let checked = 0;
-  for (let i = 0; i < total; i++) {
-    if (checkedCriteria[`${task.id}-${i}`]) checked++;
-  }
-  const percent = Math.round((checked / total) * 100);
-  return { checked, total, percent };
+  const checked = criteria.filter((_, i) => checkedCriteria[`${task.id}-${i}`]).length;
+  return { checked, total, percent: Math.round((checked / total) * 100) };
 }

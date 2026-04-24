@@ -1,35 +1,29 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { RotateCcw, Plus, Bot, History, Moon, Sun } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { RotateCcw, Plus, Moon, Sun } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { AppTask, FilterState } from '../types';
+import { FilterState } from '../types';
 import { CreateTaskModal } from './CreateTaskModal';
 import { ProjectSwitcher } from './ProjectSwitcher';
-import { AgentPanel } from './AgentPanel';
-import { ActionLog } from './ActionLog';
-import { useOrchestrationAgent } from '../agent/useOrchestrationAgent';
 import { useTheme } from '../context/ThemeContext';
 
-interface HeaderProps {
-  agentPanelOpen: boolean;
-  setAgentPanelOpen: (open: boolean) => void;
-  onOpenBlocker?: (taskId: string) => void;
-  allTasks?: AppTask[];
-}
-
-export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTasks }: HeaderProps) {
+export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const activeView = location.pathname === '/tickets' ? 'tickets' : location.pathname === '/backlog' ? 'backlog' : location.pathname === '/sprint' ? 'sprint' : 'board';
-  const { filters, setFilters, visible, resetLayout, developers, agents } = useApp();
+  const activeView = location.pathname === '/tickets'
+    ? 'tickets'
+    : location.pathname === '/backlog'
+    ? 'backlog'
+    : location.pathname === '/sprint'
+    ? 'sprint'
+    : location.pathname === '/session'
+    ? 'session'
+    : 'tickets';
+  const { filters, setFilters, visible, resetLayout, developers } = useApp();
   const { dark, toggle: toggleDark } = useTheme();
   const [showCreate, setShowCreate] = useState(false);
-  const [logPanelOpen, setLogPanelOpen] = useState(false);
-  const { queue, applyAction, dismiss, log, clearLog, runNow, llmEnabled, setLLMEnabled } = useOrchestrationAgent();
 
   const devNames = ['', ...new Set(developers.map((d) => d.name))];
-  const agentTypes = ['', ...new Set(agents.map((a) => a.type))];
   const statuses = ['', 'todo', 'progress', 'done', 'blocked'];
   const priorities = ['', 'low', 'medium', 'high', 'critical'];
 
@@ -53,11 +47,7 @@ export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTa
     setFilters({ ...filters, [key]: value });
   };
 
-  const totalNodes =
-    visible.tasks.length +
-    visible.devs.length +
-    visible.agents.length +
-    visible.subAgents.length;
+  const totalNodes = visible.tasks.length + visible.devs.length;
 
   return (
     <>
@@ -83,19 +73,8 @@ export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTa
             {/* Project switcher */}
             <ProjectSwitcher />
 
-            {/* Nav tabs — Linear style: no pill, just underline on active */}
+            {/* Nav tabs */}
             <nav className="flex items-center gap-0">
-              <button
-                onClick={() => navigate('/')}
-                className="relative px-3 h-12 text-xs font-medium transition-colors"
-                style={{
-                  color: activeView === 'board' ? '#0f0f0f' : '#71717a',
-                  borderBottom: activeView === 'board' ? '1.5px solid #0f0f0f' : '1.5px solid transparent',
-                }}
-                title="⌘1 / Ctrl+1"
-              >
-                Board
-              </button>
               <button
                 onClick={() => navigate('/tickets')}
                 className="relative px-3 h-12 text-xs font-medium transition-colors"
@@ -103,7 +82,6 @@ export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTa
                   color: activeView === 'tickets' ? '#0f0f0f' : '#71717a',
                   borderBottom: activeView === 'tickets' ? '1.5px solid #0f0f0f' : '1.5px solid transparent',
                 }}
-                title="⌘2 / Ctrl+2"
               >
                 Tickets
               </button>
@@ -127,6 +105,16 @@ export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTa
               >
                 Sprint
               </button>
+              <button
+                onClick={() => navigate('/session')}
+                className="relative px-3 h-12 text-xs font-medium transition-colors"
+                style={{
+                  color: activeView === 'session' ? '#0f0f0f' : '#71717a',
+                  borderBottom: activeView === 'session' ? '1.5px solid #0f0f0f' : '1.5px solid transparent',
+                }}
+              >
+                Session
+              </button>
             </nav>
           </div>
 
@@ -139,13 +127,6 @@ export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTa
                 value={filters.dev || ''}
                 options={devNames}
                 onChange={(value) => handleFilterChange('dev', value)}
-              />
-              <FilterSelect
-                label="Type"
-                value={filters.type || ''}
-                options={['', ...agentTypes.slice(1)]}
-                displayMap={{ '': 'All' }}
-                onChange={(value) => handleFilterChange('type', value)}
               />
               <FilterSelect
                 label="Status"
@@ -166,7 +147,7 @@ export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTa
             {/* Divider */}
             <div style={{ width: 1, height: 20, background: 'var(--border)', margin: '0 4px' }} />
 
-            {/* New Task button — primary action */}
+            {/* New Task button */}
             <button
               onClick={() => setShowCreate(true)}
               className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded transition-colors"
@@ -178,48 +159,6 @@ export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTa
             >
               <Plus className="w-3 h-3" />
               New Task
-            </button>
-
-            {/* Agent panel button */}
-            <button
-              onClick={() => {
-                setAgentPanelOpen(!agentPanelOpen);
-                setLogPanelOpen(false);
-              }}
-              className="relative flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded transition-colors border"
-              style={{
-                background: agentPanelOpen ? '#f4f4f5' : 'transparent',
-                borderColor: '#e4e4e7',
-                color: '#3f3f46',
-                borderRadius: '4px',
-              }}
-            >
-              <Bot className="w-3.5 h-3.5" />
-              {queue.length > 0 && (
-                <span
-                  className="absolute -top-1.5 -right-1.5 min-w-[1rem] h-4 px-1 rounded text-[0.6rem] font-semibold flex items-center justify-center"
-                  style={{ background: '#7c3aed', color: '#fff', borderRadius: '3px' }}
-                >
-                  {queue.length}
-                </span>
-              )}
-            </button>
-
-            {/* Action log button */}
-            <button
-              onClick={() => {
-                setLogPanelOpen((prev) => !prev);
-                setAgentPanelOpen(false);
-              }}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded border transition-colors"
-              style={{
-                background: logPanelOpen ? '#f4f4f5' : 'transparent',
-                borderColor: '#e4e4e7',
-                color: '#3f3f46',
-                borderRadius: '4px',
-              }}
-            >
-              <History className="w-3.5 h-3.5" />
             </button>
 
             {/* Reset layout */}
@@ -260,29 +199,6 @@ export function Header({ agentPanelOpen, setAgentPanelOpen, onOpenBlocker, allTa
       </header>
 
       {showCreate && <CreateTaskModal onClose={() => setShowCreate(false)} />}
-
-      <AnimatePresence>
-        {agentPanelOpen && (
-          <AgentPanel
-            queue={queue}
-            onApply={applyAction}
-            onDismiss={dismiss}
-            onClose={() => setAgentPanelOpen(false)}
-            onOpenBlocker={onOpenBlocker}
-            tasks={allTasks}
-            onRunEngine={runNow}
-            llmEnabled={llmEnabled}
-            onToggleLLM={() => setLLMEnabled(prev => !prev)}
-          />
-        )}
-        {logPanelOpen && (
-          <ActionLog
-            log={log}
-            onClear={clearLog}
-            onClose={() => setLogPanelOpen(false)}
-          />
-        )}
-      </AnimatePresence>
     </>
   );
 }

@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { fetchComments, insertComment, deleteComment } from '../data/db';
 import { TaskComment } from '../types';
 import { timeAgo } from '../utils/timeAgo';
 
@@ -22,28 +21,12 @@ interface Props {
 }
 
 export function CommentThread({ taskId }: Props) {
-  const { activeProjectId, emitActivity } = useApp();
+  const { activeProjectId } = useApp();
   const [comments, setComments] = useState<TaskComment[]>([]);
-  const [loading, setLoading] = useState(true);
   const [body, setBody] = useState('');
   const [posting, setPosting] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
-
-  const load = useCallback(async () => {
-    if (!activeProjectId) return;
-    setLoading(true);
-    try {
-      const data = await fetchComments(activeProjectId, taskId);
-      setComments(data);
-    } finally {
-      setLoading(false);
-    }
-  }, [activeProjectId, taskId]);
-
-  useEffect(() => {
-    load();
-  }, [load]);
 
   const handlePost = async () => {
     if (!body.trim() || !activeProjectId) return;
@@ -60,40 +43,18 @@ export function CommentThread({ taskId }: Props) {
         createdAt: now,
         updatedAt: now,
       };
-      await insertComment(activeProjectId, comment);
-      emitActivity({
-        taskId,
-        projectId: activeProjectId,
-        eventType: 'comment_added',
-        actor: 'user',
-        actorType: 'user',
-        payload: { commentId: comment.id },
-      });
+      setComments(prev => [...prev, comment]);
       setBody('');
-      await load();
     } finally {
       setPosting(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!activeProjectId) return;
     setDeletingIds(prev => new Set([...prev, id]));
-    try {
-      await deleteComment(activeProjectId, id);
-      setComments(prev => prev.filter(c => c.id !== id));
-    } finally {
-      setDeletingIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-    }
+    setComments(prev => prev.filter(c => c.id !== id));
+    setDeletingIds(prev => { const next = new Set(prev); next.delete(id); return next; });
   };
-
-  if (loading) {
-    return (
-      <div className="py-6 text-center">
-        <p className="text-xs" style={{ color: '#a1a1aa' }}>Loading comments...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">

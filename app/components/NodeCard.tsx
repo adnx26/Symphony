@@ -1,6 +1,5 @@
-import { NodeType, StatusType, PriorityType, AgentDispatchStatus } from '../types';
+import { NodeType, StatusType, PriorityType } from '../types';
 import { getNodeColor, getStatusColor, getPriorityColor } from '../utils/nodeColors';
-import { useApp } from '../context/AppContext';
 
 interface NodeCardProps {
   nodeId: string;
@@ -13,41 +12,11 @@ interface NodeCardProps {
   avatar?: string;
   isSelected?: boolean;
   isDragging?: boolean;
-  isAgentTouched?: boolean;
   onDragStart?: (e: React.MouseEvent) => void;
 }
 
-function useAgentDispatchStatus(nodeId: string, nodeType: NodeType): AgentDispatchStatus | null {
-  const { allTasks, getTaskDispatches } = useApp();
-  if (nodeType !== 'agent') return null;
-  const relatedTaskIds = allTasks
-    .filter(t => t.agentId === nodeId)
-    .map(t => t.id);
-  const allDispatches = relatedTaskIds.flatMap(tid => getTaskDispatches(tid));
-  if (allDispatches.length === 0) return null;
-  const latest = allDispatches.sort(
-    (a, b) => new Date(b.request.dispatchedAt).getTime() - new Date(a.request.dispatchedAt).getTime()
-  )[0];
-  return latest.status;
-}
-
-function DispatchDot({ status }: { status: AgentDispatchStatus | null }) {
-  if (!status || status === 'idle') return null;
-  const dotClass =
-    status === 'dispatched' ? 'animate-pulse bg-amber-500' :
-    status === 'running'    ? 'animate-pulse bg-violet-500' :
-    status === 'completed'  ? 'bg-emerald-500' :
-    status === 'failed'     ? 'bg-red-500' : '';
-  return (
-    <div
-      className={`absolute bottom-2 left-3 w-1.5 h-1.5 rounded-full ${dotClass}`}
-      title={status}
-    />
-  );
-}
-
 export function NodeCard({
-  nodeId,
+  nodeId: _nodeId,
   nodeType,
   title,
   subtitle,
@@ -57,11 +26,9 @@ export function NodeCard({
   avatar,
   isSelected = false,
   isDragging = false,
-  isAgentTouched = false,
   onDragStart,
 }: NodeCardProps) {
   const color = getNodeColor(nodeType);
-  const dispatchStatus = useAgentDispatchStatus(nodeId, nodeType);
   const statusCol = status ? getStatusColor(status) : null;
   const priorityCol = priority ? getPriorityColor(priority) : null;
 
@@ -81,7 +48,9 @@ export function NodeCard({
       className="relative w-56 select-none"
       style={{
         backgroundColor: 'var(--card)',
-        border: `1px solid ${isSelected ? color.accent : 'var(--border)'}`,
+        borderTop: `1px solid ${isSelected ? color.accent : 'var(--border)'}`,
+        borderRight: `1px solid ${isSelected ? color.accent : 'var(--border)'}`,
+        borderBottom: `1px solid ${isSelected ? color.accent : 'var(--border)'}`,
         borderLeft: `3px solid ${color.accent}`,
         borderRadius: '4px',
         boxShadow: isSelected
@@ -97,16 +66,6 @@ export function NodeCard({
         zIndex: isDragging ? 1000 : undefined,
       }}
     >
-      {isAgentTouched && (
-        <div style={{
-          position: 'absolute', top: 6, right: 6,
-          fontSize: '0.6rem', lineHeight: 1,
-          opacity: 0.7,
-          zIndex: 1,
-        }}>🤖</div>
-      )}
-      <DispatchDot status={dispatchStatus} />
-
       {/* Tags row */}
       <div className="flex items-center gap-1.5 mb-2 flex-wrap">
         {status && (
@@ -129,7 +88,7 @@ export function NodeCard({
             borderRadius: '3px',
           }}
         >
-          {nodeType === 'sub-agent' ? 'Sub-Agent' : nodeType.charAt(0).toUpperCase() + nodeType.slice(1)}
+          {nodeType.charAt(0).toUpperCase() + nodeType.slice(1)}
         </span>
         {priority && (
           <span

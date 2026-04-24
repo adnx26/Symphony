@@ -1,0 +1,12 @@
+{
+  "name": "symphony-claude-plugin",
+  "version": "1.0.0",
+  "description": "Claude Code hooks that stream session events to Supabase",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test test/parse-context.test.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.0"
+  }
+}

@@ -23,3 +23,12 @@
 .pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+@keyframes claude-ring {
+  0%, 100% { box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 1.5px rgba(124,58,237,0.5); }
+  50%       { box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 3px rgba(124,58,237,0.15); }
+}
+
+.claude-active-card {
+  animation: claude-ring 2s ease-in-out infinite;
+}

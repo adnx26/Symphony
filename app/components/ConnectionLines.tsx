@@ -1,6 +1,6 @@
 import { Edge, BoardPosition } from '../types';
 
-const NODE_W = 220;
+const NODE_W = 196; // matches Tailwind w-56 (14rem × 14px root font = 196px)
 const NODE_H = 68;
 
 interface ConnectionLinesProps {
@@ -10,19 +10,20 @@ interface ConnectionLinesProps {
 }
 
 export function ConnectionLines({ edges, positions, relatedIds }: ConnectionLinesProps) {
-  const getNodeCenter = (nodeId: string) => {
+  const getNodeEdgePoints = (nodeId: string) => {
     const pos = positions[nodeId];
     if (!pos) return null;
     return {
-      x: pos.x + NODE_W / 2,
-      y: pos.y + NODE_H / 2,
+      rightX: pos.x + NODE_W,
+      leftX: pos.x,
+      midY: pos.y + NODE_H / 2,
     };
   };
 
   return (
     <svg
-      className="absolute inset-0 pointer-events-none"
-      style={{ width: '100%', height: '100%', overflow: 'visible' }}
+      className="absolute pointer-events-none"
+      style={{ top: 0, left: 0, width: '10000px', height: '10000px' }}
     >
       <defs>
         <marker
@@ -51,20 +52,20 @@ export function ConnectionLines({ edges, positions, relatedIds }: ConnectionLine
       </defs>
 
       {edges.map((edge, i) => {
-        const fromCenter = getNodeCenter(edge.from);
-        const toCenter = getNodeCenter(edge.to);
+        const fromPts = getNodeEdgePoints(edge.from);
+        const toPts = getNodeEdgePoints(edge.to);
 
-        if (!fromCenter || !toCenter) return null;
+        if (!fromPts || !toPts) return null;
 
-        // Calculate connection points (right center of from, left center of to)
-        const fromX = fromCenter.x + NODE_W / 2;
-        const fromY = fromCenter.y;
-        const toX = toCenter.x - NODE_W / 2;
-        const toY = toCenter.y;
+        // Connect right-center of source → left-center of target
+        const fromX = fromPts.rightX;
+        const fromY = fromPts.midY;
+        const toX = toPts.leftX;
+        const toY = toPts.midY;
 
-        // Create curved path using cubic bezier
-        const controlX = fromX + (toX - fromX) / 3;
-        const pathD = `M ${fromX} ${fromY} C ${controlX} ${fromY}, ${controlX} ${toY}, ${toX} ${toY}`;
+        // Create smooth S-curve with control points at 50% of the horizontal span
+        const midX = fromX + (toX - fromX) / 2;
+        const pathD = `M ${fromX} ${fromY} C ${midX} ${fromY}, ${midX} ${toY}, ${toX} ${toY}`;
 
         const edgeFocused = !relatedIds || (relatedIds.has(edge.from) && relatedIds.has(edge.to));
 

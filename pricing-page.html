@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symphony PM - Pricing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', monospace;
+            background: #1f2937;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            color: #ffffff;
+            margin-bottom: 16px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 20px;
+            color: #b0b0b0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Pricing Cards */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, #1a202c 0%, #151d28 100%);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 1px solid #2d3748;
+            border-left: 4px solid #6366f1;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+            border-left-color: #7c3aed;
+        }
+
+        .pricing-card.featured {
+            border-left: 4px solid #fbbf24;
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #1f2937 0%, #1a202c 100%);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-8px);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.2);
+            border-left-color: #f59e0b;
+        }
+
+        .badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #fbbf24;
+            color: #1a202c;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+        }
+
+        .plan-description {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .price-period {
+            font-size: 16px;
+            color: #9ca3af;
+            margin-bottom: 32px;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #2d3748;
+            font-size: 14px;
+            color: #d1d5db;
+            display: flex;
+            align-items: center;
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: #34d399;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-button.primary {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1a202c;
+        }
+
+        .cta-button.primary:hover {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            transform: translateY(-2px);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: #fbbf24;
+            border: 2px solid #fbbf24;
+        }
+
+        .cta-button.secondary:hover {
+            background: #fbbf24;
+            color: #1a202c;
+            transform: translateY(-2px);
+        }
+
+        /* FAQ */
+        .faq-section {
+            background: linear-gradient(135deg, #1a202c 0%, #151d28 100%);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2d3748;
+        }
+
+        .faq-section h2 {
+            font-size: 32px;
+            color: #ffffff;
+            margin-bottom: 32px;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+
+        .faq-item {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+        }
+
+        .faq-answer {
+            font-size: 16px;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #fbbf24;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #f59e0b;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .pricing-card.featured:hover {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Simple Pricing</h1>
+            <p>One plan for every team size. Scale as you grow. No surprises.</p>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="pricing-grid">
+            <!-- Starter Plan -->
+            <div class="pricing-card">
+                <h3 class="plan-name">Starter</h3>
+                <p class="plan-description">Perfect for small teams just getting started</p>
+                <div class="price">$500</div>
+                <div class="price-period">per month</div>
+                <ul class="features">
+                    <li>Up to 10 developers</li>
+                    <li>2 AI agents included</li>
+                    <li>Basic task orchestration</li>
+                    <li>Slack integration</li>
+                    <li>Email support</li>
+                </ul>
+                <button class="cta-button secondary">Get Started</button>
+            </div>
+
+            <!-- Growth Plan (Featured) -->
+            <div class="pricing-card featured">
+                <div class="badge">Recommended</div>
+                <h3 class="plan-name">Growth</h3>
+                <p class="plan-description">For teams scaling their AI workflows</p>
+                <div class="price">$1,500</div>
+                <div class="price-period">per month</div>
+                <ul class="features">
+                    <li>Up to 30 developers</li>
+                    <li>Unlimited AI agents</li>
+                    <li>Advanced orchestration</li>
+                    <li>Custom integrations</li>
+                    <li>Priority support</li>
+                    <li>Usage analytics</li>
+                </ul>
+                <button class="cta-button primary">Start Free Trial</button>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <h3 class="plan-name">Enterprise</h3>
+                <p class="plan-description">For large organizations with custom needs</p>
+                <div class="price">Custom</div>
+                <div class="price-period">contact sales</div>
+                <ul class="features">
+                    <li>50+ developers</li>
+                    <li>Unlimited everything</li>
+                    <li>Advanced security</li>
+                    <li>Dedicated account manager</li>
+                    <li>24/7 support</li>
+                    <li>SLA guarantee</li>
+                </ul>
+                <button class="cta-button secondary">Contact Sales</button>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How much can we save with Symphony PM?</div>
+                <div class="faq-answer">On average, teams save 40% of dev time previously spent on coordination and context-switching. For a 10-person team at $150K/dev salary, that's ~$600K in recovered productivity annually. Typical ROI payback is 2-3 months.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can we upgrade or downgrade our plan?</div>
+                <div class="faq-answer">Yes. You can upgrade or downgrade anytime. Changes take effect on your next billing cycle. We'll prorate any differences.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Do you offer discounts for annual billing?</div>
+                <div class="faq-answer">Yes. Annual plans get 20% off. Growth plan: $14,400/year (instead of $18,000). Starter plan: $4,800/year (instead of $6,000).</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What happens when we add more developers?</div>
+                <div class="faq-answer">Starter and Growth plans have developer seat limits. If you exceed your plan's limit, you'll be prompted to upgrade to the next tier. Enterprise customers have unlimited seats.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Is there a free trial?</div>
+                <div class="faq-answer">Yes. All plans come with a 14-day free trial. No credit card required to start.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What support do you offer?</div>
+                <div class="faq-answer">Starter plans get email support (24-hour response). Growth plans get priority support (2-hour response). Enterprise customers get a dedicated account manager and 24/7 phone support.</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Questions? <a href="mailto:sales@symphonypm.io" style="color: #6366f1; text-decoration: none;">Contact us</a> • All prices in USD • Billed monthly</p>
+        </div>
+    </div>
+</body>
+</html>

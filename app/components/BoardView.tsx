@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { NodeType } from '../types';
 import { NodeCard } from './NodeCard';
 import { ConnectionLines } from './ConnectionLines';
 import { getRelatedNodeIds } from '../data/appData';
@@ -10,7 +11,7 @@ const NODE_H = 68;
 const BOARD_H = 4000;
 
 export function BoardView() {
-  const { visible, positions, setPositions, selectedId, setSelectedId, openPanel, closePanel, panTarget, setPanTarget, agentTouchedIds } = useApp();
+  const { visible, positions, setPositions, selectedId, setSelectedId, openPanel, closePanel, panTarget, setPanTarget } = useApp();
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
@@ -197,12 +198,10 @@ export function BoardView() {
 
   // ── Node click ───────────────────────────────────────────────────────────
   const handleNodeClick = useCallback(
-    (nodeId: string, nodeType: 'task' | 'developer' | 'agent' | 'sub-agent') => {
+    (nodeId: string, nodeType: NodeType) => {
       setSelectedId(nodeId);
       if (nodeType === 'task') {
         openPanel({ mode: 'task', id: nodeId });
-      } else {
-        openPanel({ mode: 'agent', id: nodeId });
       }
     },
     [setSelectedId, openPanel]
@@ -268,7 +267,7 @@ export function BoardView() {
                 dueDate={task.dueDate}
                 isSelected={selectedId === task.id}
                 isDragging={draggingNodeId === task.id}
-                isAgentTouched={agentTouchedIds.has(task.id)}
+
                 onDragStart={(e) => handleNodeDragStart(task.id, e, () => handleNodeClick(task.id, 'task'))}
               />
             </div>
@@ -305,63 +304,6 @@ export function BoardView() {
           );
         })}
 
-        {/* Agent nodes */}
-        {visible.agents.map((agent) => {
-          const pos = positions[agent.id];
-          const focused = !relatedIds || relatedIds.has(agent.id);
-          return (
-            <div
-              key={agent.id}
-              className="absolute"
-              style={{
-                left: pos?.x ?? 0,
-                top: pos?.y ?? 0,
-                zIndex: focused ? 10 : 2,
-                transition: 'opacity 0.25s',
-                opacity: focused ? 1 : 0.2,
-              }}
-            >
-              <NodeCard
-                nodeId={agent.id}
-                nodeType="agent"
-                title={agent.name}
-                subtitle={agent.type}
-                isSelected={selectedId === agent.id}
-                isDragging={draggingNodeId === agent.id}
-                onDragStart={(e) => handleNodeDragStart(agent.id, e, () => handleNodeClick(agent.id, 'agent'))}
-              />
-            </div>
-          );
-        })}
-
-        {/* Sub-agent nodes */}
-        {visible.subAgents.map((sa) => {
-          const pos = positions[sa.id];
-          const focused = !relatedIds || relatedIds.has(sa.id);
-          return (
-            <div
-              key={sa.id}
-              className="absolute"
-              style={{
-                left: pos?.x ?? 0,
-                top: pos?.y ?? 0,
-                zIndex: focused ? 10 : 2,
-                transition: 'opacity 0.25s',
-                opacity: focused ? 1 : 0.2,
-              }}
-            >
-              <NodeCard
-                nodeId={sa.id}
-                nodeType="sub-agent"
-                title={sa.name}
-                subtitle={sa.type}
-                isSelected={selectedId === sa.id}
-                isDragging={draggingNodeId === sa.id}
-                onDragStart={(e) => handleNodeDragStart(sa.id, e, () => handleNodeClick(sa.id, 'sub-agent'))}
-              />
-            </div>
-          );
-        })}
       </div>
 
       {/* Controls */}
