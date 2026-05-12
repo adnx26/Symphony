@@ -5,6 +5,7 @@ import { TicketsView } from "./components/TicketsView";
 import { BacklogView } from "./components/BacklogView";
 import { SprintView } from "./components/SprintView";
 import { SessionLog } from "./components/SessionLog";
+import { TokenAnalyticsView } from "./components/TokenAnalyticsView";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       { path: "backlog", Component: BacklogView },
       { path: "sprint", Component: SprintView },
       { path: "session", Component: SessionLog },
+      { path: "token-analytics", Component: TokenAnalyticsView },
     ],
   },
 ]);

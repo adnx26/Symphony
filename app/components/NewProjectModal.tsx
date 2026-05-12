@@ -20,7 +20,7 @@ export function NewProjectModal({ onClose }: NewProjectModalProps) {
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
+      style={{ backgroundColor: 'rgba(2,6,23,0.62)', backdropFilter: 'blur(10px)' }}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -28,22 +28,23 @@ export function NewProjectModal({ onClose }: NewProjectModalProps) {
       <div
         className="relative w-full max-w-sm shadow-xl"
         style={{
-          background: '#ffffff',
-          border: '1px solid #e4e4e7',
-          borderRadius: '6px',
+          background: 'var(--panel-elevated)',
+          border: '1px solid var(--border)',
+          borderRadius: '18px',
+          boxShadow: '0 28px 70px rgba(2, 6, 23, 0.46)',
         }}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between px-5 py-4"
-          style={{ borderBottom: '1px solid #e4e4e7' }}
+          style={{ borderBottom: '1px solid var(--border)' }}
         >
-          <h2 className="text-sm font-semibold" style={{ color: '#0f0f0f' }}>New Project</h2>
+          <h2 className="text-sm font-semibold" style={{ color: 'var(--foreground)' }}>New Project</h2>
           <button
             onClick={onClose}
             className="p-1.5 rounded transition-colors"
-            style={{ color: '#71717a' }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+            style={{ color: 'var(--muted-foreground)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
             onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
           >
             <X className="w-4 h-4" />
@@ -53,7 +54,7 @@ export function NewProjectModal({ onClose }: NewProjectModalProps) {
         {/* Body */}
         <div className="px-5 py-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium" style={{ color: '#71717a' }}>Project Name</label>
+            <label className="text-xs font-medium" style={{ color: '#94a3b8' }}>Project Name</label>
             <input
               autoFocus
               type="text"
@@ -63,17 +64,23 @@ export function NewProjectModal({ onClose }: NewProjectModalProps) {
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               className="w-full px-3 py-2 text-sm outline-none transition-colors"
               style={{
-                background: '#fafafa',
-                border: '1px solid #e4e4e7',
-                borderRadius: '4px',
-                color: '#0f0f0f',
+                background: '#0d1520',
+                border: '1px solid #1f2b3a',
+                borderRadius: '12px',
+                color: '#e5e7eb',
                 fontFamily: 'Inter, sans-serif',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = '#a1a1aa')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = '#e4e4e7')}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = '#3b82f6';
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.12)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = '#1f2b3a';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
             />
           </div>
-          <p className="mt-3 text-xs leading-relaxed" style={{ color: '#a1a1aa' }}>
+          <p className="mt-3 text-xs leading-relaxed" style={{ color: 'var(--muted-foreground)' }}>
             The current project will be saved automatically and you can switch back to it at any time.
           </p>
         </div>
@@ -81,19 +88,19 @@ export function NewProjectModal({ onClose }: NewProjectModalProps) {
         {/* Footer */}
         <div
           className="flex items-center justify-end gap-2 px-5 py-4"
-          style={{ borderTop: '1px solid #e4e4e7' }}
+          style={{ borderTop: '1px solid var(--border)' }}
         >
           <button
             onClick={onClose}
             className="px-3.5 py-1.5 text-sm transition-colors"
             style={{
-              color: '#3f3f46',
-              border: '1px solid #e4e4e7',
-              borderRadius: '4px',
-              background: 'transparent',
+              color: '#cbd5e1',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              background: 'rgba(16, 25, 35, 0.72)',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(16, 25, 35, 0.72)')}
           >
             Cancel
           </button>
@@ -102,9 +109,10 @@ export function NewProjectModal({ onClose }: NewProjectModalProps) {
             disabled={!name.trim()}
             className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
-              background: '#0f0f0f',
-              color: '#ffffff',
-              borderRadius: '4px',
+              background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.22))',
+              color: '#f8fafc',
+              borderRadius: '12px',
+              border: '1px solid rgba(96, 165, 250, 0.28)',
             }}
           >
             <FolderPlus className="w-3.5 h-3.5" />

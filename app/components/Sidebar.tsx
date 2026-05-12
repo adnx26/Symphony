@@ -33,7 +33,7 @@ export function Sidebar() {
 
   if (collapsed) {
     return (
-      <div className="relative" style={{ borderRight: '1px solid #e4e4e7' }}>
+      <div className="relative" style={{ borderRight: '1px solid var(--sidebar-border)' }}>
         <button
           onClick={() => {
             setCollapsed(false);
@@ -42,9 +42,9 @@ export function Sidebar() {
           className="absolute left-0 top-20 w-5 h-10 flex items-center justify-center transition-colors"
           style={{
             background: 'var(--sidebar)',
-            border: '1px solid var(--border)',
+            border: '1px solid var(--sidebar-border)',
             borderLeft: 'none',
-            borderRadius: '0 4px 4px 0',
+            borderRadius: '0 12px 12px 0',
             color: 'var(--muted-foreground)',
           }}
         >
@@ -59,14 +59,15 @@ export function Sidebar() {
       className="w-56 flex-shrink-0 relative flex flex-col"
       style={{
         background: 'var(--sidebar)',
-        borderRight: '1px solid var(--border)',
+        borderRight: '1px solid var(--sidebar-border)',
+        boxShadow: 'inset -1px 0 0 rgba(49, 67, 85, 0.14)',
       }}
     >
       <div className="h-full overflow-y-auto">
         {/* Header */}
-        <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
-          <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>Structure</p>
-          <p className="text-xs mt-0.5" style={{ color: '#a1a1aa' }}>Dependency tree</p>
+        <div className="px-4 py-4 border-b" style={{ borderColor: 'var(--sidebar-border)' }}>
+          <p className="text-xs font-semibold tracking-[0.08em] uppercase" style={{ color: 'var(--foreground)' }}>Structure</p>
+          <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Dependency tree</p>
         </div>
 
         {/* Tree */}
@@ -95,9 +96,9 @@ export function Sidebar() {
         className="absolute -right-[1px] top-20 w-5 h-10 flex items-center justify-center transition-colors z-10"
         style={{
           background: 'var(--sidebar)',
-          border: '1px solid var(--border)',
+          border: '1px solid var(--sidebar-border)',
           borderLeft: 'none',
-          borderRadius: '0 4px 4px 0',
+          borderRadius: '0 12px 12px 0',
           color: 'var(--muted-foreground)',
         }}
       >
@@ -126,16 +127,20 @@ function TreeNodeItem({ node, expanded, onToggle, selected, onSelect, expandedNo
     <div>
       <button
         onClick={() => onSelect(node)}
-        className="w-full text-left flex items-center gap-1.5 py-1 text-xs transition-colors group"
+        className="w-full text-left flex items-center gap-2 py-1.5 text-xs transition-all group"
         style={{
           paddingLeft: `${indent + 12}px`,
           paddingRight: '12px',
-          background: selected ? '#f0f0f2' : 'transparent',
-          color: selected ? '#0f0f0f' : '#3f3f46',
+          margin: '2px 8px',
+          width: `calc(100% - 16px)`,
+          background: selected ? 'rgba(139, 92, 246, 0.12)' : 'transparent',
+          color: selected ? '#eff6ff' : '#cbd5e1',
           borderLeft: selected ? `2px solid ${color.accent}` : '2px solid transparent',
+          borderRadius: '10px',
+          boxShadow: selected ? `0 0 0 1px ${color.glow}` : 'none',
         }}
         onMouseEnter={(e) => {
-          if (!selected) (e.currentTarget as HTMLElement).style.background = '#f4f4f5';
+          if (!selected) (e.currentTarget as HTMLElement).style.background = 'rgba(21, 34, 51, 0.82)';
         }}
         onMouseLeave={(e) => {
           if (!selected) (e.currentTarget as HTMLElement).style.background = 'transparent';
@@ -149,7 +154,7 @@ function TreeNodeItem({ node, expanded, onToggle, selected, onSelect, expandedNo
               onToggle(node.id);
             }}
             className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0"
-            style={{ color: '#a1a1aa' }}
+            style={{ color: 'var(--muted-foreground)' }}
           >
             <ChevronRight
               className={`w-3 h-3 transition-transform ${expanded ? 'rotate-90' : ''}`}
@@ -166,7 +171,7 @@ function TreeNodeItem({ node, expanded, onToggle, selected, onSelect, expandedNo
         />
 
         {/* Label */}
-        <span className="flex-1 truncate" style={{ fontWeight: selected ? 500 : 400 }}>
+        <span className="flex-1 truncate" style={{ fontWeight: selected ? 600 : 500 }}>
           {node.label}
         </span>
       </button>

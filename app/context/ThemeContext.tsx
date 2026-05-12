@@ -9,7 +9,8 @@ const ThemeContext = createContext<ThemeContextType>({ dark: false, toggle: () =
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [dark, setDark] = useState(() => {
-    return localStorage.getItem('symphony-theme') === 'dark';
+    const saved = localStorage.getItem('symphony-theme');
+    return saved ? saved === 'dark' : true;
   });
 
   useEffect(() => {

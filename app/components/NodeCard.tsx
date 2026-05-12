@@ -52,51 +52,58 @@ export function NodeCard({
         borderRight: `1px solid ${isSelected ? color.accent : 'var(--border)'}`,
         borderBottom: `1px solid ${isSelected ? color.accent : 'var(--border)'}`,
         borderLeft: `3px solid ${color.accent}`,
-        borderRadius: '4px',
+        borderRadius: '16px',
         boxShadow: isSelected
-          ? '0 0 0 2px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.1)'
+          ? `0 0 0 1px ${color.glow}, 0 18px 36px rgba(2, 6, 23, 0.34)`
           : isDragging
-          ? '0 8px 24px rgba(0,0,0,0.12)'
-          : '0 1px 4px rgba(0,0,0,0.06)',
+          ? '0 18px 40px rgba(2, 6, 23, 0.4)'
+          : '0 12px 28px rgba(2, 6, 23, 0.28)',
         opacity: isDragging ? 0.9 : 1,
         cursor: isDragging ? 'grabbing' : 'grab',
         transform: isDragging ? 'scale(1.02) rotate(0.5deg)' : isSelected ? 'scale(1.01)' : 'scale(1)',
         transition: isDragging ? 'none' : 'transform 0.1s, box-shadow 0.1s, border-color 0.1s',
-        padding: '10px 12px 10px 10px',
+        padding: '12px 14px 12px 12px',
         zIndex: isDragging ? 1000 : undefined,
+        backdropFilter: 'blur(12px)',
       }}
     >
       {/* Tags row */}
       <div className="flex items-center gap-1.5 mb-2 flex-wrap">
         {status && (
           <span
-            className="px-1.5 py-0.5 text-[0.65rem] font-medium"
+            className="px-2 py-1 text-[0.62rem] font-medium"
             style={{
               backgroundColor: statusCol?.bg,
               color: statusCol?.text,
-              borderRadius: '3px',
+              borderRadius: '999px',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+              letterSpacing: '0.04em',
             }}
           >
             {statusLabel}
           </span>
         )}
         <span
-          className="px-1.5 py-0.5 text-[0.65rem] font-medium"
+          className="px-2 py-1 text-[0.62rem] font-medium"
           style={{
             backgroundColor: color.bg,
             color: color.accent,
-            borderRadius: '3px',
+            borderRadius: '999px',
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            letterSpacing: '0.04em',
           }}
         >
           {nodeType.charAt(0).toUpperCase() + nodeType.slice(1)}
         </span>
         {priority && (
           <span
-            className="px-1.5 py-0.5 text-[0.65rem] font-medium ml-auto"
+            className="px-2 py-1 text-[0.62rem] font-medium ml-auto"
             style={{
               backgroundColor: priorityCol?.bg,
               color: priorityCol?.text,
-              borderRadius: '3px',
+              borderRadius: '999px',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+              letterSpacing: '0.04em',
             }}
           >
             {priority.charAt(0).toUpperCase() + priority.slice(1)}
@@ -126,17 +133,20 @@ export function NodeCard({
           <div
             className="w-5 h-5 flex items-center justify-center text-[0.6rem] font-semibold"
             style={{
-              background: 'var(--secondary)',
+              background: 'rgba(16, 25, 35, 0.95)',
               border: '1px solid var(--border)',
               borderRadius: '50%',
-              color: 'var(--secondary-foreground)',
+              color: '#dce3ee',
             }}
           >
             {avatar}
           </div>
         ) : null}
         {dueDate ? (
-          <span className="text-[0.65rem] tabular-nums ml-auto" style={{ color: '#a1a1aa' }}>
+          <span
+            className="text-[0.65rem] tabular-nums ml-auto"
+            style={{ color: 'var(--muted-foreground)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
+          >
             {new Date(dueDate).toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric',

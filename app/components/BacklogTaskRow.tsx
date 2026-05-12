@@ -40,11 +40,11 @@ export function BacklogTaskRow({
     <div
       className="flex items-center gap-3 px-4 py-2.5 group transition-colors"
       style={{
-        background: selected ? 'rgba(124,58,237,0.04)' : 'transparent',
-        borderBottom: '1px solid #f4f4f5',
+        background: selected ? 'rgba(139,92,246,0.1)' : 'transparent',
+        borderBottom: '1px solid rgba(49, 67, 85, 0.42)',
       }}
       onMouseEnter={(e) => {
-        if (!selected) (e.currentTarget as HTMLElement).style.background = '#fafafa';
+        if (!selected) (e.currentTarget as HTMLElement).style.background = 'rgba(21, 34, 51, 0.76)';
       }}
       onMouseLeave={(e) => {
         if (!selected) (e.currentTarget as HTMLElement).style.background = 'transparent';
@@ -63,13 +63,13 @@ export function BacklogTaskRow({
       {/* Indent indicator */}
       <div
         className="flex-shrink-0"
-        style={{ width: '12px', height: '1px', background: '#e4e4e7', marginLeft: '4px' }}
+        style={{ width: '12px', height: '1px', background: 'rgba(49, 67, 85, 0.8)', marginLeft: '4px' }}
       />
 
       {/* Title */}
       <span
         className="flex-1 text-xs truncate"
-        style={{ color: task.status === 'done' ? '#a1a1aa' : '#0f0f0f', textDecoration: task.status === 'done' ? 'line-through' : 'none' }}
+        style={{ color: task.status === 'done' ? 'var(--muted-foreground)' : 'var(--foreground)', textDecoration: task.status === 'done' ? 'line-through' : 'none' }}
       >
         {task.title}
       </span>
@@ -81,9 +81,10 @@ export function BacklogTaskRow({
         style={{
           background: statusCol.bg,
           color: statusCol.text,
-          borderRadius: '3px',
+          borderRadius: '999px',
           border: 'none',
           outline: 'none',
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
         }}
         title="Click to change status"
       >
@@ -96,9 +97,10 @@ export function BacklogTaskRow({
         style={{
           background: priorityCol.bg,
           color: priorityCol.text,
-          borderRadius: '3px',
+          borderRadius: '999px',
           minWidth: '52px',
           textAlign: 'center',
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
         }}
       >
         {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
@@ -111,25 +113,25 @@ export function BacklogTaskRow({
             <div
               className="w-4 h-4 flex items-center justify-center text-[0.55rem] font-semibold flex-shrink-0"
               style={{
-                background: '#f4f4f5',
-                border: '1px solid #e4e4e7',
+                background: 'rgba(16, 25, 35, 0.95)',
+                border: '1px solid rgba(49, 67, 85, 0.72)',
                 borderRadius: '50%',
-                color: '#3f3f46',
+                color: '#dce3ee',
               }}
             >
               {dev.initials}
             </div>
-            <span className="text-[0.65rem] truncate" style={{ color: '#71717a' }}>{dev.name}</span>
+            <span className="text-[0.65rem] truncate" style={{ color: '#94a3b8' }}>{dev.name}</span>
           </>
         ) : (
-          <span className="text-[0.65rem]" style={{ color: '#d1d1d6' }}>Unassigned</span>
+          <span className="text-[0.65rem]" style={{ color: 'var(--text-subtle)' }}>Unassigned</span>
         )}
       </div>
 
       {/* Due date */}
       <span
         className="flex-shrink-0 text-[0.65rem] tabular-nums"
-        style={{ color: '#a1a1aa', minWidth: '60px', textAlign: 'right' }}
+        style={{ color: 'var(--muted-foreground)', minWidth: '60px', textAlign: 'right', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
       >
         {task.dueDate
           ? new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })

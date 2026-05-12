@@ -28,13 +28,25 @@ function RootContent() {
     <>
       {showSplash && <LoadingSplash />}
 
-      <div className="h-screen w-screen overflow-hidden relative" style={{ background: '#ffffff' }}>
+      <div
+        className="h-screen w-screen overflow-hidden relative"
+        style={{
+          background:
+            'radial-gradient(circle at top, rgba(59,130,246,0.08), transparent 26%), linear-gradient(180deg, #070b12 0%, #05070d 100%)',
+        }}
+      >
         <div className="relative h-full flex flex-col">
           <Header />
 
           <div className="flex-1 flex overflow-hidden">
             <Sidebar />
-            <main className="flex-1 overflow-hidden">
+            <main
+              className="flex-1 overflow-hidden relative"
+              style={{
+                background:
+                  'linear-gradient(180deg, rgba(11,17,26,0.72), rgba(7,11,18,0.9))',
+              }}
+            >
               <Outlet context={{}} />
             </main>
           </div>

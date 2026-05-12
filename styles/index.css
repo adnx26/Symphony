@@ -25,8 +25,8 @@
 }
 
 @keyframes claude-ring {
-  0%, 100% { box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 1.5px rgba(124,58,237,0.5); }
-  50%       { box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 3px rgba(124,58,237,0.15); }
+  0%, 100% { box-shadow: 0 12px 28px rgba(2, 6, 23, 0.34), 0 0 0 1px rgba(139, 92, 246, 0.55); }
+  50%       { box-shadow: 0 14px 36px rgba(2, 6, 23, 0.4), 0 0 0 3px rgba(139, 92, 246, 0.18); }
 }
 
 .claude-active-card {

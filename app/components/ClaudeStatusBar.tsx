@@ -31,10 +31,10 @@ export function ClaudeStatusBar() {
   return (
     <div
       className="flex items-center gap-2 px-4 h-7 text-xs shrink-0"
-      style={{ background: 'var(--background)', borderTop: '1px solid var(--border)' }}
+      style={{ background: 'rgba(7, 11, 18, 0.92)', borderTop: '1px solid rgba(49, 67, 85, 0.7)' }}
     >
-      <span style={{ color: '#7c3aed', fontSize: '0.75rem' }}>⬡</span>
-      <span style={{ color: 'var(--foreground)', fontWeight: 500 }}>Claude</span>
+      <span style={{ color: '#8b5cf6', fontSize: '0.75rem' }}>⬡</span>
+      <span style={{ color: 'var(--foreground)', fontWeight: 600 }}>Claude</span>
 
       {isIdle || !latestEvent ? (
         <span style={{ color: 'var(--muted-foreground)' }}>— idle</span>

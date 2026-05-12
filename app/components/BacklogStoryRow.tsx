@@ -41,7 +41,7 @@ export function BacklogStoryRow({
 }: BacklogStoryRowProps) {
   const [expanded, setExpanded] = useState(false);
 
-  const statusCol = getStatusColor(story.status) ?? { bg: '#f4f4f5', text: '#71717a' };
+  const statusCol = getStatusColor(story.status) ?? { bg: 'rgba(123, 132, 148, 0.14)', text: '#9ca3af' };
   const doneTasks = tasks.filter((t) => t.status === 'done').length;
   const progress = tasks.length > 0 ? Math.round((doneTasks / tasks.length) * 100) : 0;
 
@@ -64,12 +64,12 @@ export function BacklogStoryRow({
         style={{
           paddingLeft: `${indentPx}px`,
           paddingRight: '16px',
-          background: isStorySelected ? 'rgba(124,58,237,0.04)' : 'transparent',
-          borderBottom: '1px solid #f4f4f5',
+          background: isStorySelected ? 'rgba(139,92,246,0.1)' : 'transparent',
+          borderBottom: '1px solid rgba(49, 67, 85, 0.42)',
         }}
         onClick={() => setExpanded((p) => !p)}
         onMouseEnter={(e) => {
-          if (!isStorySelected) (e.currentTarget as HTMLElement).style.background = '#fafafa';
+          if (!isStorySelected) (e.currentTarget as HTMLElement).style.background = 'rgba(21, 34, 51, 0.76)';
         }}
         onMouseLeave={(e) => {
           (e.currentTarget as HTMLElement).style.background =
@@ -89,7 +89,7 @@ export function BacklogStoryRow({
         <ChevronRight
           className="w-3.5 h-3.5 flex-shrink-0 transition-transform"
           style={{
-            color: '#a1a1aa',
+            color: 'var(--muted-foreground)',
             transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
           }}
         />
@@ -104,7 +104,7 @@ export function BacklogStoryRow({
         )}
 
         {/* Title */}
-        <span className="flex-1 text-xs font-medium truncate" style={{ color: '#0f0f0f' }}>
+        <span className="flex-1 text-xs font-medium truncate" style={{ color: 'var(--foreground)' }}>
           {story.title}
         </span>
 
@@ -113,9 +113,11 @@ export function BacklogStoryRow({
           <span
             className="flex-shrink-0 text-[0.65rem] tabular-nums px-1.5 py-0.5"
             style={{
-              background: '#f4f4f5',
-              color: '#71717a',
-              borderRadius: '3px',
+              background: 'rgba(16, 25, 35, 0.92)',
+              color: '#94a3b8',
+              borderRadius: '999px',
+              border: '1px solid rgba(49, 67, 85, 0.72)',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
             }}
           >
             {story.storyPoints} pts
@@ -129,9 +131,10 @@ export function BacklogStoryRow({
           style={{
             background: statusCol.bg,
             color: statusCol.text,
-            borderRadius: '3px',
+            borderRadius: '999px',
             border: 'none',
             outline: 'none',
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           }}
           title="Click to change status"
         >
@@ -143,7 +146,7 @@ export function BacklogStoryRow({
           <div className="flex-shrink-0 flex items-center gap-1.5" style={{ minWidth: '80px' }}>
             <div
               className="h-1 flex-1 rounded-full overflow-hidden"
-              style={{ background: '#f4f4f5' }}
+              style={{ background: 'rgba(49, 67, 85, 0.6)' }}
             >
               <div
                 className="h-full rounded-full transition-all"
@@ -153,7 +156,7 @@ export function BacklogStoryRow({
                 }}
               />
             </div>
-            <span className="text-[0.6rem] tabular-nums" style={{ color: '#a1a1aa' }}>
+            <span className="text-[0.6rem] tabular-nums" style={{ color: 'var(--muted-foreground)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
               {doneTasks}/{tasks.length}
             </span>
           </div>
@@ -166,7 +169,7 @@ export function BacklogStoryRow({
           {tasks.length === 0 ? (
             <div
               className="text-[0.7rem] px-8 py-2"
-              style={{ color: '#a1a1aa', paddingLeft: `${indentPx + 32}px` }}
+              style={{ color: 'var(--muted-foreground)', paddingLeft: `${indentPx + 32}px` }}
             >
               No tasks yet
             </div>
@@ -192,14 +195,14 @@ export function BacklogStoryRow({
             className="flex items-center gap-1 text-[0.7rem] font-medium px-3 py-2 transition-colors"
             style={{
               paddingLeft: `${indentPx + 28}px`,
-              color: '#a1a1aa',
+              color: 'var(--muted-foreground)',
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
               width: '100%',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#7c3aed')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#a1a1aa')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted-foreground)')}
           >
             <Plus className="w-3 h-3" />
             Add Task

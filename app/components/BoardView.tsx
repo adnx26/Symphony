@@ -211,7 +211,13 @@ export function BoardView() {
     <div
       ref={containerRef}
       className="relative w-full h-full overflow-hidden"
-      style={{ backgroundColor: 'var(--canvas-bg)', cursor: draggingNodeId ? 'grabbing' : isPanning.current ? 'grabbing' : 'grab' }}
+      style={{
+        backgroundColor: 'var(--canvas-bg)',
+        backgroundImage:
+          'radial-gradient(circle at 1px 1px, var(--canvas-dot) 1px, transparent 0), linear-gradient(180deg, rgba(10,15,24,0.2), rgba(5,7,13,0.45))',
+        backgroundSize: '24px 24px, 100% 100%',
+        cursor: draggingNodeId ? 'grabbing' : isPanning.current ? 'grabbing' : 'grab',
+      }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
@@ -237,7 +243,7 @@ export function BoardView() {
         {relatedIds && (
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ backgroundColor: 'rgba(248,248,249,0.72)', zIndex: 3, transition: 'opacity 0.25s' }}
+            style={{ backgroundColor: 'rgba(5, 7, 13, 0.68)', zIndex: 3, transition: 'opacity 0.25s' }}
           />
         )}
 
@@ -310,31 +316,32 @@ export function BoardView() {
       <div
         className="absolute bottom-4 right-4 flex items-center z-10"
         style={{
-          background: '#ffffff',
-          border: '1px solid #e4e4e7',
-          borderRadius: '4px',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+          background: 'rgba(11, 17, 26, 0.88)',
+          border: '1px solid var(--border)',
+          borderRadius: '14px',
+          boxShadow: '0 16px 36px rgba(2, 6, 23, 0.38)',
           overflow: 'hidden',
+          backdropFilter: 'blur(18px)',
         }}
       >
         <button
           onClick={handleZoomOut}
           className="p-2 transition-colors"
-          style={{ color: '#71717a', borderRight: '1px solid #e4e4e7' }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+          style={{ color: 'var(--muted-foreground)', borderRight: '1px solid var(--border)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.9)')}
           onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
           title="Zoom Out"
         >
           <ZoomOut className="w-3.5 h-3.5" />
         </button>
-        <div className="px-2.5 text-xs tabular-nums font-medium" style={{ color: '#3f3f46' }}>
+        <div className="px-2.5 text-xs tabular-nums font-medium" style={{ color: '#dce3ee', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
           {Math.round(zoom * 100)}%
         </div>
         <button
           onClick={handleZoomIn}
           className="p-2 transition-colors"
-          style={{ color: '#71717a', borderLeft: '1px solid #e4e4e7', borderRight: '1px solid #e4e4e7' }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+          style={{ color: 'var(--muted-foreground)', borderLeft: '1px solid var(--border)', borderRight: '1px solid var(--border)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.9)')}
           onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
           title="Zoom In"
         >
@@ -343,8 +350,8 @@ export function BoardView() {
         <button
           onClick={handleFitScreen}
           className="p-2 transition-colors"
-          style={{ color: '#71717a' }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+          style={{ color: 'var(--muted-foreground)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.9)')}
           onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
           title="Fit to Screen"
         >
@@ -356,10 +363,11 @@ export function BoardView() {
       <div
         className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 px-4 py-2"
         style={{
-          background: '#ffffff',
-          border: '1px solid #e4e4e7',
-          borderRadius: '4px',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+          background: 'rgba(11, 17, 26, 0.84)',
+          border: '1px solid var(--border)',
+          borderRadius: '14px',
+          boxShadow: '0 16px 36px rgba(2, 6, 23, 0.34)',
+          backdropFilter: 'blur(18px)',
         }}
       >
         {[
@@ -370,7 +378,7 @@ export function BoardView() {
         ].map(({ color, label }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
-            <span className="text-xs" style={{ color: '#71717a' }}>{label}</span>
+            <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{label}</span>
           </div>
         ))}
       </div>
@@ -379,8 +387,8 @@ export function BoardView() {
       {visible.tasks.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">
-            <p className="text-sm font-medium mb-1" style={{ color: '#0f0f0f' }}>No nodes to display</p>
-            <p className="text-xs" style={{ color: '#a1a1aa' }}>Adjust your filters to see more nodes</p>
+            <p className="text-sm font-medium mb-1" style={{ color: 'var(--foreground)' }}>No nodes to display</p>
+            <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Adjust your filters to see more nodes</p>
           </div>
         </div>
       )}

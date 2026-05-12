@@ -110,27 +110,27 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.4)' }}
+      style={{ background: 'rgba(2,6,23,0.62)', backdropFilter: 'blur(10px)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
         className="relative flex flex-col w-full max-w-xl max-h-[90vh] overflow-hidden"
         style={{
-          background: '#ffffff',
-          border: '1px solid #e4e4e7',
-          borderRadius: '6px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
+          background: 'var(--panel-elevated)',
+          border: '1px solid var(--border)',
+          borderRadius: '18px',
+          boxShadow: '0 28px 70px rgba(2, 6, 23, 0.46)',
         }}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between px-5 py-4 border-b"
-          style={{ borderColor: '#e4e4e7' }}
+          style={{ borderColor: 'var(--border)' }}
         >
-          <h2 className="text-sm font-semibold" style={{ color: '#0f0f0f' }}>
+          <h2 className="text-sm font-semibold" style={{ color: 'var(--foreground)' }}>
             {sprint ? 'Edit Sprint' : 'Plan Sprint'}
           </h2>
-          <button onClick={onClose} className="p-1 rounded" style={{ color: '#71717a' }}>
+          <button onClick={onClose} className="p-1 rounded" style={{ color: 'var(--muted-foreground)' }}>
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -139,7 +139,7 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
           {/* Name */}
           <div>
-            <label className="block text-xs font-medium mb-1" style={{ color: '#3f3f46' }}>
+            <label className="block text-xs font-medium mb-1" style={{ color: '#94a3b8' }}>
               Sprint Name <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <input
@@ -149,17 +149,17 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
               placeholder="e.g. Sprint 1"
               className="w-full text-xs px-3 py-2 outline-none"
               style={{
-                background: '#f8f8f9',
-                border: '1px solid #e4e4e7',
-                borderRadius: '4px',
-                color: '#0f0f0f',
+                background: '#0d1520',
+                border: '1px solid #1f2b3a',
+                borderRadius: '12px',
+                color: '#e5e7eb',
               }}
             />
           </div>
 
           {/* Goal */}
           <div>
-            <label className="block text-xs font-medium mb-1" style={{ color: '#3f3f46' }}>
+            <label className="block text-xs font-medium mb-1" style={{ color: '#94a3b8' }}>
               Sprint Goal
             </label>
             <textarea
@@ -169,10 +169,10 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
               rows={2}
               className="w-full text-xs px-3 py-2 outline-none resize-none"
               style={{
-                background: '#f8f8f9',
-                border: '1px solid #e4e4e7',
-                borderRadius: '4px',
-                color: '#0f0f0f',
+                background: '#0d1520',
+                border: '1px solid #1f2b3a',
+                borderRadius: '12px',
+                color: '#e5e7eb',
               }}
             />
           </div>
@@ -180,7 +180,7 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
           {/* Dates + Capacity */}
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-medium mb-1" style={{ color: '#3f3f46' }}>
+              <label className="block text-xs font-medium mb-1" style={{ color: '#94a3b8' }}>
                 Start Date
               </label>
               <input
@@ -189,15 +189,15 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
                 onChange={(e) => setStartDate(e.target.value)}
                 className="w-full text-xs px-3 py-2 outline-none"
                 style={{
-                  background: '#f8f8f9',
-                  border: '1px solid #e4e4e7',
-                  borderRadius: '4px',
-                  color: '#0f0f0f',
+                  background: '#0d1520',
+                  border: '1px solid #1f2b3a',
+                  borderRadius: '12px',
+                  color: '#e5e7eb',
                 }}
               />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-1" style={{ color: '#3f3f46' }}>
+              <label className="block text-xs font-medium mb-1" style={{ color: '#94a3b8' }}>
                 End Date
               </label>
               <input
@@ -206,15 +206,15 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
                 onChange={(e) => setEndDate(e.target.value)}
                 className="w-full text-xs px-3 py-2 outline-none"
                 style={{
-                  background: '#f8f8f9',
-                  border: '1px solid #e4e4e7',
-                  borderRadius: '4px',
-                  color: '#0f0f0f',
+                  background: '#0d1520',
+                  border: '1px solid #1f2b3a',
+                  borderRadius: '12px',
+                  color: '#e5e7eb',
                 }}
               />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-1" style={{ color: '#3f3f46' }}>
+              <label className="block text-xs font-medium mb-1" style={{ color: '#94a3b8' }}>
                 Capacity (pts)
               </label>
               <input
@@ -224,10 +224,10 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
                 onChange={(e) => setCapacity(Number(e.target.value))}
                 className="w-full text-xs px-3 py-2 outline-none"
                 style={{
-                  background: '#f8f8f9',
-                  border: '1px solid #e4e4e7',
-                  borderRadius: '4px',
-                  color: '#0f0f0f',
+                  background: '#0d1520',
+                  border: '1px solid #1f2b3a',
+                  borderRadius: '12px',
+                  color: '#e5e7eb',
                 }}
               />
             </div>
@@ -236,12 +236,12 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
           {/* Task selection */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-medium" style={{ color: '#3f3f46' }}>
+              <label className="text-xs font-medium" style={{ color: '#94a3b8' }}>
                 Tasks
               </label>
               <span
                 className="text-xs font-medium"
-                style={{ color: overCapacity ? '#ef4444' : '#71717a' }}
+                style={{ color: overCapacity ? '#fb7185' : '#94a3b8' }}
               >
                 {selectedPoints} / {capacity} pts
                 {overCapacity && ' — over capacity!'}
@@ -249,13 +249,13 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
             </div>
 
             {availableTasks.length === 0 ? (
-              <p className="text-xs py-3 text-center" style={{ color: '#a1a1aa' }}>
+              <p className="text-xs py-3 text-center" style={{ color: 'var(--muted-foreground)' }}>
                 No tasks available to add
               </p>
             ) : (
               <div
                 className="space-y-1 max-h-52 overflow-y-auto pr-1"
-                style={{ border: '1px solid #e4e4e7', borderRadius: '4px', padding: '8px' }}
+                style={{ border: '1px solid var(--border)', borderRadius: '14px', padding: '8px', background: 'rgba(11, 17, 26, 0.72)' }}
               >
                 {availableTasks.map((task) => {
                   const priorityCol = getPriorityColor(task.priority);
@@ -265,7 +265,7 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
                       key={task.id}
                       className="flex items-center gap-2.5 px-2 py-1.5 rounded cursor-pointer"
                       style={{
-                        background: checked ? '#f8f8f9' : 'transparent',
+                        background: checked ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
                       }}
                     >
                       <input
@@ -274,7 +274,7 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
                         onChange={() => toggleTask(task.id)}
                         className="shrink-0"
                       />
-                      <span className="flex-1 text-xs truncate" style={{ color: '#0f0f0f' }}>
+                      <span className="flex-1 text-xs truncate" style={{ color: 'var(--foreground)' }}>
                         {task.title}
                       </span>
                       <span
@@ -282,7 +282,8 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
                         style={{
                           background: priorityCol?.bg,
                           color: priorityCol?.text,
-                          borderRadius: '3px',
+                          borderRadius: '999px',
+                          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
                         }}
                       >
                         {task.priority}
@@ -290,7 +291,7 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
                       {task.storyPoints != null && (
                         <span
                           className="text-[0.6rem] font-semibold tabular-nums shrink-0 w-5 text-right"
-                          style={{ color: '#71717a' }}
+                          style={{ color: '#94a3b8', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
                         >
                           {task.storyPoints}
                         </span>
@@ -306,16 +307,16 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
         {/* Footer */}
         <div
           className="flex items-center justify-end gap-2 px-5 py-3 border-t"
-          style={{ borderColor: '#e4e4e7' }}
+          style={{ borderColor: 'var(--border)' }}
         >
           <button
             onClick={onClose}
             className="px-3 py-1.5 text-xs font-medium border"
             style={{
-              background: 'transparent',
-              borderColor: '#e4e4e7',
-              color: '#3f3f46',
-              borderRadius: '4px',
+              background: 'rgba(16, 25, 35, 0.72)',
+              borderColor: 'var(--border)',
+              color: '#cbd5e1',
+              borderRadius: '12px',
             }}
           >
             Cancel
@@ -325,9 +326,10 @@ export function SprintPlanningModal({ sprint, onClose }: SprintPlanningModalProp
             disabled={!name.trim()}
             className="px-3 py-1.5 text-xs font-medium"
             style={{
-              background: name.trim() ? '#0f0f0f' : '#d1d1d6',
+              background: name.trim() ? 'linear-gradient(135deg, rgba(20,184,166,0.22), rgba(59,130,246,0.2))' : 'rgba(49, 67, 85, 0.72)',
               color: '#ffffff',
-              borderRadius: '4px',
+              borderRadius: '12px',
+              border: '1px solid rgba(96, 165, 250, 0.2)',
               cursor: name.trim() ? 'pointer' : 'not-allowed',
             }}
           >

@@ -58,29 +58,30 @@ export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
+      style={{ backgroundColor: 'rgba(2,6,23,0.62)', backdropFilter: 'blur(10px)' }}
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       {/* Modal */}
       <div
         className="relative w-full max-w-md shadow-xl"
         style={{
-          background: '#ffffff',
-          border: '1px solid #e4e4e7',
-          borderRadius: '6px',
+          background: 'var(--panel-elevated)',
+          border: '1px solid var(--border)',
+          borderRadius: '18px',
+          boxShadow: '0 28px 70px rgba(2, 6, 23, 0.46)',
         }}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between px-5 py-4"
-          style={{ borderBottom: '1px solid #e4e4e7' }}
+          style={{ borderBottom: '1px solid var(--border)' }}
         >
-          <h2 className="text-sm font-semibold" style={{ color: '#0f0f0f' }}>New Task</h2>
+          <h2 className="text-sm font-semibold" style={{ color: 'var(--foreground)' }}>New Task</h2>
           <button
             onClick={onClose}
             className="p-1.5 rounded transition-colors"
-            style={{ color: '#71717a' }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+            style={{ color: 'var(--muted-foreground)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
             onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
           >
             <X className="w-4 h-4" />
@@ -150,19 +151,19 @@ export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
         {/* Footer */}
         <div
           className="flex items-center justify-end gap-2 px-5 py-4"
-          style={{ borderTop: '1px solid #e4e4e7' }}
+          style={{ borderTop: '1px solid var(--border)' }}
         >
           <button
             onClick={onClose}
             className="px-3.5 py-1.5 text-sm transition-colors"
             style={{
-              color: '#3f3f46',
-              border: '1px solid #e4e4e7',
-              borderRadius: '4px',
-              background: 'transparent',
+              color: '#cbd5e1',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              background: 'rgba(16, 25, 35, 0.72)',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(16, 25, 35, 0.72)')}
           >
             Cancel
           </button>
@@ -171,9 +172,10 @@ export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
             disabled={!form.title.trim()}
             className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
-              background: '#0f0f0f',
-              color: '#ffffff',
-              borderRadius: '4px',
+              background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.22))',
+              color: '#f8fafc',
+              borderRadius: '12px',
+              border: '1px solid rgba(96, 165, 250, 0.28)',
             }}
           >
             <Plus className="w-3.5 h-3.5" />
@@ -185,19 +187,19 @@ export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
       <style>{`
         .modal-input {
           width: 100%;
-          background: #fafafa;
-          border: 1px solid #e4e4e7;
-          border-radius: 4px;
+          background: #0d1520;
+          border: 1px solid #1f2b3a;
+          border-radius: 12px;
           padding: 6px 10px;
           font-size: 0.8125rem;
-          color: #0f0f0f;
+          color: #e5e7eb;
           outline: none;
           transition: border-color 0.1s;
           font-family: 'Inter', sans-serif;
         }
-        .modal-input::placeholder { color: #a1a1aa; }
-        .modal-input:focus { border-color: #a1a1aa; background: #ffffff; }
-        .modal-input option { background: #ffffff; color: #0f0f0f; }
+        .modal-input::placeholder { color: #7b8494; }
+        .modal-input:focus { border-color: #3b82f6; background: #101923; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12); }
+        .modal-input option { background: #0e1622; color: #e5e7eb; }
       `}</style>
     </div>
   );
@@ -206,7 +208,7 @@ export function CreateTaskModal({ onClose, storyId }: CreateTaskModalProps) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium" style={{ color: '#71717a' }}>{label}</label>
+      <label className="text-xs font-medium" style={{ color: '#94a3b8' }}>{label}</label>
       {children}
     </div>
   );

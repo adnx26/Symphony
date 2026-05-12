@@ -4,35 +4,35 @@
   --font-size: 14px;
 
   /* Core surfaces */
-  --background: #ffffff;
-  --foreground: #0f0f0f;
-  --card: #ffffff;
-  --card-foreground: #0f0f0f;
-  --popover: #ffffff;
-  --popover-foreground: #0f0f0f;
+  --background: #070b12;
+  --foreground: #e5e7eb;
+  --card: #101923;
+  --card-foreground: #e5e7eb;
+  --popover: #0e1622;
+  --popover-foreground: #e5e7eb;
 
   /* Brand */
-  --primary: #0f0f0f;
-  --primary-foreground: #ffffff;
+  --primary: #8b5cf6;
+  --primary-foreground: #f8fafc;
 
   /* Neutral UI tones */
-  --secondary: #f4f4f5;
-  --secondary-foreground: #0f0f0f;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --accent: #f4f4f5;
-  --accent-foreground: #0f0f0f;
+  --secondary: #121c29;
+  --secondary-foreground: #d7deea;
+  --muted: #0b111a;
+  --muted-foreground: #7b8494;
+  --accent: #131d2a;
+  --accent-foreground: #e5e7eb;
 
   /* Destructive */
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
+  --destructive: #ef476f;
+  --destructive-foreground: #fff1f5;
 
   /* Borders & inputs */
-  --border: #e4e4e7;
-  --border-strong: #d1d1d6;
-  --input: #ffffff;
-  --input-background: #fafafa;
-  --switch-background: #d1d1d6;
+  --border: #1f2b3a;
+  --border-strong: #314355;
+  --input: #101923;
+  --input-background: #0d1520;
+  --switch-background: #314355;
 
   /* Typography weights */
   --font-weight-medium: 500;
@@ -41,68 +41,53 @@
   /* Focus ring */
   --ring: #3b82f6;
 
-  /* Radius — Linear uses very small radii */
-  --radius: 0.25rem;   /* 4px  */
+  --radius: 0.75rem;
 
   /* Sidebar */
-  --sidebar: #fafafa;
-  --sidebar-foreground: #0f0f0f;
-  --sidebar-primary: #0f0f0f;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0f0f2;
-  --sidebar-accent-foreground: #0f0f0f;
-  --sidebar-border: #e4e4e7;
+  --sidebar: #0b111a;
+  --sidebar-foreground: #dce3ee;
+  --sidebar-primary: #8b5cf6;
+  --sidebar-primary-foreground: #f8fafc;
+  --sidebar-accent: #111a26;
+  --sidebar-accent-foreground: #e5e7eb;
+  --sidebar-border: #1c2836;
   --sidebar-ring: #3b82f6;
 
   /* Canvas */
-  --canvas-bg: #f8f8f9;
-  --canvas-dot: #d4d4d8;
+  --canvas-bg: #060b12;
+  --canvas-dot: rgba(78, 97, 122, 0.22);
+  --panel: #0b111a;
+  --panel-elevated: #0e1622;
+  --surface: #101923;
+  --surface-hover: #152233;
+  --surface-muted: #0d1520;
+  --text-muted: #7b8494;
+  --text-subtle: #4b5563;
+  --glow-purple: rgba(139, 92, 246, 0.22);
+  --glow-blue: rgba(59, 130, 246, 0.18);
+  --glow-teal: rgba(20, 184, 166, 0.16);
 }
 
 /* ── Dark mode ─────────────────────────────────────────────────────────────── */
 html.dark {
-  --background: #0f0f11;
-  --foreground: #f4f4f5;
-  --card: #18181b;
-  --card-foreground: #f4f4f5;
-  --popover: #18181b;
-  --popover-foreground: #f4f4f5;
-
-  --primary: #f4f4f5;
-  --primary-foreground: #0f0f11;
-
-  --secondary: #27272a;
-  --secondary-foreground: #f4f4f5;
-  --muted: #27272a;
-  --muted-foreground: #71717a;
-  --accent: #27272a;
-  --accent-foreground: #f4f4f5;
-
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-
-  --border: #27272a;
-  --border-strong: #3f3f46;
-  --input: #18181b;
-  --input-background: #18181b;
-  --switch-background: #3f3f46;
-
-  --sidebar: #0f0f11;
-  --sidebar-foreground: #f4f4f5;
-  --sidebar-primary: #f4f4f5;
-  --sidebar-primary-foreground: #0f0f11;
-  --sidebar-accent: #1c1c1f;
-  --sidebar-accent-foreground: #f4f4f5;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #3b82f6;
-
-  --canvas-bg: #0c0c0e;
-  --canvas-dot: #27272a;
+  color-scheme: dark;
 }
 
-html.dark ::-webkit-scrollbar-thumb { background: #3f3f46; }
-html.dark ::-webkit-scrollbar-thumb:hover { background: #52525b; }
-html.dark option { background: #18181b; color: #f4f4f5; }
+html.dark ::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  background: #314355;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:hover {
+  background: #46607d;
+}
+
+html.dark option,
+option {
+  background: #0e1622;
+  color: #e5e7eb;
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -167,12 +152,12 @@ html.dark option { background: #18181b; color: #f4f4f5; }
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #d4d4d8;
+    background: #314355;
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #a1a1aa;
+    background: #46607d;
   }
 
   html {
@@ -190,9 +175,23 @@ html.dark option { background: #18181b; color: #f4f4f5; }
     -webkit-appearance: none;
   }
 
-  /* Remove blue glow on selects in dark dropdowns */
-  option {
-    background: #ffffff;
-    color: #0f0f0f;
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(123, 132, 148, 0.18) 1px, transparent 0),
+      radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 34%),
+      radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08), transparent 28%);
+    background-size: 24px 24px, 100% 100%, 100% 100%;
+    opacity: 0.45;
+    z-index: -1;
   }
 }

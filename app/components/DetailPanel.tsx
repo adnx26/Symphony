@@ -22,7 +22,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
     <p
       className="text-[0.65rem] font-semibold uppercase tracking-wide mb-1"
-      style={{ color: '#a1a1aa' }}
+      style={{ color: 'var(--muted-foreground)' }}
     >
       {children}
     </p>
@@ -40,10 +40,11 @@ function fieldSelect(
       onChange={(e) => onChange(e.target.value)}
       className="w-full text-xs px-2 py-1 rounded outline-none focus:ring-1"
       style={{
-        background: '#f4f4f5',
-        border: '1px solid #e4e4e7',
-        color: '#3f3f46',
+        background: '#0d1520',
+        border: '1px solid #1f2b3a',
+        color: '#e5e7eb',
         appearance: 'auto',
+        borderRadius: '12px',
       }}
     >
       {options.map((o) => (
@@ -182,28 +183,29 @@ export function DetailPanel() {
           transition={{ type: 'spring', damping: 28, stiffness: 220 }}
           className="fixed right-0 top-0 bottom-0 w-[380px] z-50 overflow-y-auto"
           style={{
-            background: '#ffffff',
-            borderLeft: '1px solid #e4e4e7',
-            boxShadow: '-4px 0 24px rgba(0,0,0,0.08)',
+            background: 'var(--panel-elevated)',
+            borderLeft: '1px solid var(--border)',
+            boxShadow: '-20px 0 60px rgba(2, 6, 23, 0.46)',
+            backdropFilter: 'blur(16px)',
           }}
         >
           {/* Accent bar */}
           <div style={{ height: 2, background: color.accent }} />
 
           {/* Header */}
-          <div className="px-5 pt-4 pb-3" style={{ borderBottom: '1px solid #e4e4e7' }}>
+          <div className="px-5 pt-4 pb-3" style={{ borderBottom: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between mb-2">
               <span
                 className="text-[0.65rem] font-semibold px-2 py-0.5 uppercase tracking-wide"
-                style={{ background: color.bg, color: color.accent, borderRadius: '3px' }}
+                style={{ background: color.bg, color: color.accent, borderRadius: '999px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
               >
                 Task
               </span>
               <button
                 onClick={closePanel}
                 className="p-1.5 rounded transition-colors"
-                style={{ color: '#71717a' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+                style={{ color: 'var(--muted-foreground)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
                 <X className="w-3.5 h-3.5" />
@@ -223,16 +225,17 @@ export function DetailPanel() {
                 }}
                 className="w-full text-base font-semibold outline-none px-1 -mx-1 rounded"
                 style={{
-                  color: '#0f0f0f',
-                  border: '1px solid #d97706',
-                  borderRadius: '4px',
+                  color: '#e5e7eb',
+                  border: '1px solid #f59e0b',
+                  borderRadius: '12px',
                   padding: '2px 6px',
+                  background: '#0d1520',
                 }}
               />
             ) : (
               <h2
                 className="text-base font-semibold cursor-pointer hover:underline decoration-dotted"
-                style={{ color: '#0f0f0f' }}
+                style={{ color: 'var(--foreground)' }}
                 onClick={() => {
                   setTitleDraft(task.title);
                   setEditingTitle(true);
@@ -245,17 +248,17 @@ export function DetailPanel() {
           </div>
 
           {/* Tab switcher */}
-          <div className="flex" style={{ borderBottom: '1px solid #e4e4e7' }}>
+          <div className="flex" style={{ borderBottom: '1px solid var(--border)' }}>
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className="flex-1 py-2.5 text-[0.65rem] font-medium transition-colors"
                 style={{
-                  color: activeTab === tab.id ? '#0f0f0f' : '#a1a1aa',
+                  color: activeTab === tab.id ? '#eff6ff' : 'var(--muted-foreground)',
                   borderBottom:
-                    activeTab === tab.id ? '2px solid #d97706' : '2px solid transparent',
-                  background: 'transparent',
+                    activeTab === tab.id ? '2px solid #f59e0b' : '2px solid transparent',
+                  background: activeTab === tab.id ? 'rgba(245, 158, 11, 0.08)' : 'transparent',
                   marginBottom: '-1px',
                 }}
               >
@@ -709,24 +712,25 @@ export function DetailPanel() {
         transition={{ type: 'spring', damping: 28, stiffness: 220 }}
         className="fixed right-0 top-0 bottom-0 w-[360px] z-50 overflow-y-auto"
         style={{
-          background: '#ffffff',
-          borderLeft: '1px solid #e4e4e7',
-          boxShadow: '-4px 0 24px rgba(0,0,0,0.08)',
+          background: 'var(--panel-elevated)',
+          borderLeft: '1px solid var(--border)',
+          boxShadow: '-20px 0 60px rgba(2, 6, 23, 0.46)',
+          backdropFilter: 'blur(16px)',
         }}
       >
         {/* Accent bar */}
         <div style={{ height: 2, background: color.accent }} />
 
         {/* Header */}
-        <div className="px-5 py-4" style={{ borderBottom: '1px solid #e4e4e7' }}>
+        <div className="px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               {panelStack.length > 1 && (
                 <button
                   onClick={panelBack}
                   className="p-1 rounded transition-colors"
-                  style={{ color: '#71717a' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+                  style={{ color: 'var(--muted-foreground)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
                   <ChevronLeft className="w-4 h-4" />
@@ -734,7 +738,7 @@ export function DetailPanel() {
               )}
               <span
                 className="text-[0.65rem] font-semibold px-2 py-0.5 uppercase tracking-wide"
-                style={{ background: color.bg, color: color.accent, borderRadius: '3px' }}
+                style={{ background: color.bg, color: color.accent, borderRadius: '999px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
               >
                 {nodeTypeLabel}
               </span>
@@ -742,36 +746,36 @@ export function DetailPanel() {
             <button
               onClick={closePanel}
               className="p-1.5 rounded transition-colors"
-              style={{ color: '#71717a' }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+              style={{ color: 'var(--muted-foreground)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
-          <h2 className="text-base font-semibold mb-1" style={{ color: '#0f0f0f' }}>{node.name}</h2>
-          {dev && <p className="text-xs" style={{ color: '#71717a' }}>{dev.role}</p>}
+          <h2 className="text-base font-semibold mb-1" style={{ color: 'var(--foreground)' }}>{node.name}</h2>
+          {dev && <p className="text-xs" style={{ color: '#94a3b8' }}>{dev.role}</p>}
         </div>
 
         {/* Content */}
         <div className="px-5 py-4 space-y-5">
           {node.desc && (
             <div>
-              <p className="text-[0.65rem] font-semibold uppercase tracking-wide mb-1.5" style={{ color: '#a1a1aa' }}>
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wide mb-1.5" style={{ color: 'var(--muted-foreground)' }}>
                 About
               </p>
-              <p className="text-xs leading-relaxed" style={{ color: '#3f3f46' }}>{node.desc}</p>
+              <p className="text-xs leading-relaxed" style={{ color: '#cbd5e1' }}>{node.desc}</p>
             </div>
           )}
 
           {node.outputs && node.outputs.length > 0 && (
             <div>
-              <p className="text-[0.65rem] font-semibold uppercase tracking-wide mb-2" style={{ color: '#a1a1aa' }}>
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>
                 Outputs
               </p>
               <ul className="space-y-1.5">
                 {node.outputs.map((output, i) => (
-                  <li key={i} className="flex items-center gap-2 text-xs" style={{ color: '#3f3f46' }}>
+                  <li key={i} className="flex items-center gap-2 text-xs" style={{ color: '#cbd5e1' }}>
                     <div
                       className="w-1 h-1 rounded-full flex-shrink-0"
                       style={{ backgroundColor: color.accent }}
@@ -785,7 +789,7 @@ export function DetailPanel() {
 
           {node.criteria && node.criteria.length > 0 && (
             <div>
-              <p className="text-[0.65rem] font-semibold uppercase tracking-wide mb-2" style={{ color: '#a1a1aa' }}>
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>
                 {dev ? 'Responsibilities' : 'Success Criteria'}
               </p>
               <div className="space-y-2">
@@ -804,7 +808,7 @@ export function DetailPanel() {
                       <span
                         className="text-xs leading-relaxed"
                         style={{
-                          color: checked ? '#a1a1aa' : '#3f3f46',
+                          color: checked ? 'var(--muted-foreground)' : '#cbd5e1',
                           textDecoration: checked ? 'line-through' : 'none',
                         }}
                       >

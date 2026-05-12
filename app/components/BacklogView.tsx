@@ -78,19 +78,21 @@ export function BacklogView() {
   const totalTaskCount = allTasks.length;
 
   return (
-    <div className="h-full overflow-y-auto" style={{ background: '#f8f8f9' }}>
-      <div className="max-w-4xl mx-auto px-5 py-5">
+    <div className="h-full overflow-y-auto" style={{ background: 'linear-gradient(180deg, rgba(11,17,26,0.55), rgba(7,11,18,0.88))' }}>
+      <div className="max-w-5xl mx-auto px-5 py-6">
 
         {/* ── Header ────────────────────────────────────────────────────────── */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <h1 className="text-sm font-semibold" style={{ color: '#0f0f0f' }}>Backlog</h1>
+            <h1 className="text-sm font-semibold tracking-[0.04em]" style={{ color: 'var(--foreground)' }}>Backlog</h1>
             <span
-              className="text-[0.65rem] font-medium px-1.5 py-0.5 tabular-nums"
+              className="text-[0.65rem] font-medium px-2 py-1 tabular-nums"
               style={{
-                background: '#f4f4f5',
-                color: '#71717a',
-                borderRadius: '3px',
+                background: 'rgba(16, 25, 35, 0.92)',
+                color: '#94a3b8',
+                borderRadius: '999px',
+                border: '1px solid rgba(49, 67, 85, 0.72)',
+                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
               }}
             >
               {totalTaskCount} tasks
@@ -98,16 +100,16 @@ export function BacklogView() {
           </div>
           <button
             onClick={() => setEpicModalOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium transition-all"
             style={{
-              background: '#0f0f0f',
-              color: '#ffffff',
-              borderRadius: '4px',
-              border: 'none',
+              background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.22))',
+              color: '#f8fafc',
+              borderRadius: '12px',
+              border: '1px solid rgba(96, 165, 250, 0.28)',
               cursor: 'pointer',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#3f3f46')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = '#0f0f0f')}
+            onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(1.08)')}
+            onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}
           >
             <Plus className="w-3 h-3" />
             Create Epic
@@ -119,25 +121,27 @@ export function BacklogView() {
           <div
             className="flex items-center gap-3 px-4 py-2.5 mb-4 rounded"
             style={{
-              background: '#ffffff',
-              border: '1px solid #e4e4e7',
-              borderLeft: '3px solid #7c3aed',
+              background: '#101923',
+              border: '1px solid var(--border)',
+              borderLeft: '3px solid #8b5cf6',
+              borderRadius: '16px',
+              boxShadow: '0 12px 28px rgba(2, 6, 23, 0.24)',
             }}
           >
-            <span className="text-xs font-medium flex-1" style={{ color: '#0f0f0f' }}>
+            <span className="text-xs font-medium flex-1" style={{ color: 'var(--foreground)' }}>
               {selectedIds.size} item{selectedIds.size > 1 ? 's' : ''} selected
             </span>
             <button
               onClick={() => setSprintPickerOpen((p) => !p)}
               className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded border transition-colors"
               style={{
-                background: 'transparent',
-                color: '#3f3f46',
-                borderColor: '#e4e4e7',
+                background: 'rgba(16, 25, 35, 0.72)',
+                color: '#cbd5e1',
+                borderColor: 'var(--border)',
                 cursor: 'pointer',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(16, 25, 35, 0.72)')}
             >
               <MoveRight className="w-3 h-3" />
               Move to Sprint
@@ -146,13 +150,13 @@ export function BacklogView() {
               onClick={handleDeleteSelected}
               className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded border transition-colors"
               style={{
-                background: 'transparent',
-                color: '#be123c',
-                borderColor: '#fecdd3',
+                background: 'rgba(239, 71, 111, 0.08)',
+                color: '#fb7185',
+                borderColor: 'rgba(239, 71, 111, 0.28)',
                 cursor: 'pointer',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#fff1f2')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239, 71, 111, 0.14)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(239, 71, 111, 0.08)')}
             >
               <Trash2 className="w-3 h-3" />
               Delete selected
@@ -160,8 +164,8 @@ export function BacklogView() {
             <button
               onClick={clearSelection}
               className="text-xs px-2 py-1 rounded transition-colors"
-              style={{ color: '#71717a', background: 'transparent', border: 'none', cursor: 'pointer' }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#f4f4f5')}
+              style={{ color: 'var(--muted-foreground)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(21, 34, 51, 0.82)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
               Clear
@@ -174,9 +178,10 @@ export function BacklogView() {
           <div
             className="mb-4 px-4 py-3 rounded text-xs"
             style={{
-              background: '#ffffff',
-              border: '1px solid #e4e4e7',
-              color: '#71717a',
+              background: '#101923',
+              border: '1px solid var(--border)',
+              color: 'var(--muted-foreground)',
+              borderRadius: '14px',
             }}
           >
             No sprints yet. Create a sprint to move items.
@@ -188,24 +193,28 @@ export function BacklogView() {
           <div
             className="flex flex-col items-center justify-center py-16 rounded"
             style={{
-              background: '#ffffff',
-              border: '1px solid #e4e4e7',
+              background: '#101923',
+              border: '1px solid var(--border)',
+              borderRadius: '18px',
+              boxShadow: '0 12px 28px rgba(2, 6, 23, 0.24)',
             }}
           >
-            <p className="text-sm font-medium mb-1" style={{ color: '#0f0f0f' }}>
+            <p className="text-sm font-medium mb-1" style={{ color: 'var(--foreground)' }}>
               Backlog is empty
             </p>
-            <p className="text-xs mb-4" style={{ color: '#a1a1aa' }}>
+            <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>
               Create an epic to start organizing your work
             </p>
             <button
               onClick={() => setEpicModalOpen(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded"
               style={{
-                background: '#0f0f0f',
-                color: '#ffffff',
+                background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.22))',
+                color: '#f8fafc',
                 border: 'none',
                 cursor: 'pointer',
+                borderRadius: '12px',
+                borderColor: 'rgba(96, 165, 250, 0.28)',
               }}
             >
               <Plus className="w-3 h-3" />
@@ -246,7 +255,7 @@ export function BacklogView() {
             <SectionHeader title="Unepiced Stories" count={unepicedStories.length} />
             <div
               className="rounded overflow-hidden"
-              style={{ border: '1px solid #e4e4e7', background: '#ffffff' }}
+              style={{ border: '1px solid var(--border)', background: '#101923', borderRadius: '16px' }}
             >
               {unepicedStories.map((story) => {
                 const storyTasks = allTasks.filter((t) => t.storyId === story.id);
@@ -271,13 +280,13 @@ export function BacklogView() {
               onClick={() => openAddStory(undefined)}
               className="flex items-center gap-1 text-[0.7rem] font-medium px-3 py-2 mt-1 transition-colors"
               style={{
-                color: '#a1a1aa',
+                color: 'var(--muted-foreground)',
                 background: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#7c3aed')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#a1a1aa')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted-foreground)')}
             >
               <Plus className="w-3 h-3" />
               Add Story
@@ -291,7 +300,7 @@ export function BacklogView() {
             <SectionHeader title="Orphan Tasks" count={orphanTasks.length} />
             <div
               className="rounded overflow-hidden"
-              style={{ border: '1px solid #e4e4e7', background: '#ffffff' }}
+              style={{ border: '1px solid var(--border)', background: '#101923', borderRadius: '16px' }}
             >
               {orphanTasks.map((task) => (
                 <BacklogTaskRow
@@ -313,13 +322,13 @@ export function BacklogView() {
             onClick={() => openAddStory(undefined)}
             className="flex items-center gap-1 text-[0.7rem] font-medium transition-colors"
             style={{
-              color: '#a1a1aa',
+              color: 'var(--muted-foreground)',
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#7c3aed')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#a1a1aa')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted-foreground)')}
           >
             <Plus className="w-3 h-3" />
             Add Story
@@ -366,10 +375,10 @@ export function BacklogView() {
 function SectionHeader({ title, count }: { title: string; count: number }) {
   return (
     <div className="flex items-center gap-2 mb-2 px-1">
-      <span className="text-xs font-semibold" style={{ color: '#3f3f46' }}>{title}</span>
+        <span className="text-xs font-semibold tracking-[0.04em]" style={{ color: '#cbd5e1' }}>{title}</span>
       <span
-        className="text-[0.6rem] font-medium px-1.5 py-0.5 tabular-nums"
-        style={{ background: '#f4f4f5', color: '#71717a', borderRadius: '3px' }}
+        className="text-[0.6rem] font-medium px-2 py-1 tabular-nums"
+        style={{ background: 'rgba(16, 25, 35, 0.92)', color: '#94a3b8', borderRadius: '999px', border: '1px solid rgba(49, 67, 85, 0.72)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
       >
         {count}
       </span>

@@ -18,25 +18,34 @@ interface KanbanColumnProps {
 
 function KanbanColumn({ title, tasks, accent, onTaskClick, developers }: KanbanColumnProps) {
   return (
-    <div className="flex flex-col flex-1 min-w-0">
+    <div
+      className="flex flex-col flex-1 min-w-0 rounded-2xl px-2 py-2"
+      style={{
+        background: 'linear-gradient(180deg, rgba(11,17,26,0.82), rgba(16,25,35,0.72))',
+        border: '1px solid rgba(31, 43, 58, 0.9)',
+        boxShadow: 'inset 0 1px 0 rgba(96, 165, 250, 0.04)',
+      }}
+    >
       {/* Column header */}
       <div
         className="flex items-center gap-2 px-3 py-2 mb-2 border-b"
-        style={{ borderColor: '#e4e4e7' }}
+        style={{ borderColor: 'rgba(49, 67, 85, 0.7)' }}
       >
         <div
           className="w-2 h-2 rounded-full shrink-0"
           style={{ background: accent }}
         />
-        <span className="text-xs font-semibold" style={{ color: '#0f0f0f' }}>
+        <span className="text-xs font-semibold tracking-[0.04em]" style={{ color: '#e5e7eb' }}>
           {title}
         </span>
         <span
-          className="ml-auto text-[0.6rem] font-semibold px-1.5 py-0.5"
+          className="ml-auto text-[0.6rem] font-semibold px-2 py-1"
           style={{
-            background: '#f4f4f5',
-            color: '#71717a',
-            borderRadius: '3px',
+            background: 'rgba(16, 25, 35, 0.92)',
+            color: '#94a3b8',
+            borderRadius: '999px',
+            border: '1px solid rgba(49, 67, 85, 0.72)',
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           }}
         >
           {tasks.length}
@@ -48,7 +57,7 @@ function KanbanColumn({ title, tasks, accent, onTaskClick, developers }: KanbanC
         {tasks.length === 0 ? (
           <p
             className="text-center text-xs py-8"
-            style={{ color: '#a1a1aa' }}
+            style={{ color: 'var(--muted-foreground)' }}
           >
             No tasks
           </p>
@@ -90,21 +99,23 @@ function SprintTaskCard({ task, developers, onClick }: SprintTaskCardProps) {
       onClick={onClick}
       className="px-3 py-2.5 cursor-pointer transition-all"
       style={{
-        background: '#ffffff',
-        border: '1px solid #e4e4e7',
-        borderRadius: '4px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+        background: '#101923',
+        border: '1px solid #1f2b3a',
+        borderRadius: '16px',
+        boxShadow: '0 12px 28px rgba(2, 6, 23, 0.28)',
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = '#d1d1d6';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(0,0,0,0.07)';
+        (e.currentTarget as HTMLElement).style.borderColor = '#314355';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 18px 36px rgba(2, 6, 23, 0.34)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = '#e4e4e7';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
+        (e.currentTarget as HTMLElement).style.borderColor = '#1f2b3a';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 28px rgba(2, 6, 23, 0.28)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
       }}
     >
-      <p className="text-xs font-medium mb-2 line-clamp-2" style={{ color: '#0f0f0f' }}>
+      <p className="text-xs font-medium mb-2 line-clamp-2" style={{ color: 'var(--foreground)' }}>
         {task.title}
       </p>
 
@@ -115,7 +126,8 @@ function SprintTaskCard({ task, developers, onClick }: SprintTaskCardProps) {
           style={{
             background: statusCol?.bg,
             color: statusCol?.text,
-            borderRadius: '3px',
+            borderRadius: '999px',
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           }}
         >
           {statusLabel}
@@ -131,7 +143,8 @@ function SprintTaskCard({ task, developers, onClick }: SprintTaskCardProps) {
             style={{
               background: priorityCol?.bg,
               color: priorityCol?.text,
-              borderRadius: '3px',
+              borderRadius: '999px',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
             }}
           >
             {task.priority}
@@ -142,10 +155,10 @@ function SprintTaskCard({ task, developers, onClick }: SprintTaskCardProps) {
             <div
               className="w-5 h-5 flex items-center justify-center text-[0.55rem] font-semibold"
               style={{
-                background: '#f4f4f5',
-                border: '1px solid #e4e4e7',
+                background: 'rgba(16, 25, 35, 0.95)',
+                border: '1px solid rgba(49, 67, 85, 0.72)',
                 borderRadius: '50%',
-                color: '#3f3f46',
+                color: '#dce3ee',
               }}
               title={dev.name}
             >
@@ -159,9 +172,11 @@ function SprintTaskCard({ task, developers, onClick }: SprintTaskCardProps) {
           <span
             className="text-[0.6rem] font-semibold tabular-nums px-1.5 py-0.5"
             style={{
-              background: '#f4f4f5',
-              color: '#71717a',
-              borderRadius: '3px',
+              background: 'rgba(16, 25, 35, 0.92)',
+              color: '#94a3b8',
+              borderRadius: '999px',
+              border: '1px solid rgba(49, 67, 85, 0.72)',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
             }}
           >
             {task.storyPoints} pts
@@ -211,30 +226,31 @@ export function SprintView() {
   // No active or planned sprint — empty state
   if (!displaySprint) {
     return (
-      <div className="flex flex-col h-full items-center justify-center" style={{ background: '#f8f8f9' }}>
+      <div className="flex flex-col h-full items-center justify-center" style={{ background: 'linear-gradient(180deg, rgba(11,17,26,0.55), rgba(7,11,18,0.88))' }}>
         <div className="text-center max-w-xs">
           <div
             className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center"
-            style={{ background: '#f4f4f5' }}
+            style={{ background: 'rgba(16, 25, 35, 0.92)', border: '1px solid rgba(49, 67, 85, 0.72)' }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#71717a" strokeWidth="2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
               <rect x="3" y="4" width="18" height="18" rx="2" />
               <path d="M16 2v4M8 2v4M3 10h18" />
             </svg>
           </div>
-          <p className="text-sm font-semibold mb-1" style={{ color: '#0f0f0f' }}>
+          <p className="text-sm font-semibold mb-1" style={{ color: 'var(--foreground)' }}>
             No active sprint
           </p>
-          <p className="text-xs mb-4" style={{ color: '#71717a' }}>
+          <p className="text-xs mb-4" style={{ color: '#94a3b8' }}>
             Plan a sprint to start tracking your work
           </p>
           <button
             onClick={() => { setEditSprint(undefined); setPlanningOpen(true); }}
             className="px-4 py-2 text-xs font-medium"
             style={{
-              background: '#0f0f0f',
-              color: '#ffffff',
-              borderRadius: '4px',
+              background: 'linear-gradient(135deg, rgba(20,184,166,0.22), rgba(59,130,246,0.2))',
+              color: '#eff6ff',
+              borderRadius: '12px',
+              border: '1px solid rgba(45, 212, 191, 0.22)',
             }}
           >
             Plan Sprint
@@ -252,7 +268,7 @@ export function SprintView() {
   }
 
   return (
-    <div className="flex flex-col h-full" style={{ background: '#f8f8f9' }}>
+    <div className="flex flex-col h-full" style={{ background: 'linear-gradient(180deg, rgba(11,17,26,0.55), rgba(7,11,18,0.88))' }}>
       {/* Sprint header */}
       <SprintHeader
         sprint={displaySprint}

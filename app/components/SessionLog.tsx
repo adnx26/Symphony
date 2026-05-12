@@ -41,8 +41,8 @@ export function SessionLog() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
-          <p className="text-sm font-medium mb-1" style={{ color: '#0f0f0f' }}>No session activity yet</p>
-          <p className="text-xs" style={{ color: '#a1a1aa' }}>
+          <p className="text-sm font-medium mb-1" style={{ color: 'var(--foreground)' }}>No session activity yet</p>
+          <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
             Start a Claude Code session — events will appear here in real time.
           </p>
         </div>
@@ -51,9 +51,9 @@ export function SessionLog() {
   }
 
   return (
-    <div className="h-full overflow-y-auto p-5" style={{ background: '#f8f8f9' }}>
+    <div className="h-full overflow-y-auto p-5 md:p-6" style={{ background: 'linear-gradient(180deg, rgba(11,17,26,0.55), rgba(7,11,18,0.88))' }}>
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-sm font-semibold mb-4" style={{ color: '#0f0f0f' }}>
+        <h2 className="text-sm font-semibold mb-4 tracking-[0.04em]" style={{ color: 'var(--foreground)' }}>
           Session Log
         </h2>
 
@@ -63,9 +63,10 @@ export function SessionLog() {
               key={event.id}
               className="flex items-start gap-3 p-3"
               style={{
-                background: '#ffffff',
-                border: '1px solid #e4e4e7',
-                borderRadius: '4px',
+                background: '#101923',
+                border: '1px solid #1f2b3a',
+                borderRadius: '14px',
+                boxShadow: '0 12px 28px rgba(2, 6, 23, 0.28)',
               }}
             >
               <div className="flex-1 min-w-0">
@@ -83,8 +84,8 @@ export function SessionLog() {
                   {event.tool_name && (
                     <span
                       className="px-1.5 py-0.5 text-[0.6rem] font-medium"
-                      style={{ background: '#f4f4f5', color: '#71717a', borderRadius: '3px' }}
-                    >
+                    style={{ background: 'rgba(16,25,35,0.92)', color: '#94a3b8', borderRadius: '999px', border: '1px solid rgba(49,67,85,0.72)' }}
+                  >
                       {event.tool_name}
                     </span>
                   )}
@@ -92,17 +93,17 @@ export function SessionLog() {
                     <button
                       onClick={() => navigate('/tickets')}
                       className="px-1.5 py-0.5 text-[0.6rem] font-medium transition-colors"
-                      style={{ background: '#ede9fe', color: '#7c3aed', borderRadius: '3px' }}
+                      style={{ background: 'rgba(139, 92, 246, 0.16)', color: '#c4b5fd', borderRadius: '999px', border: '1px solid rgba(139, 92, 246, 0.24)' }}
                     >
                       #{event.task_id}
                     </button>
                   )}
                 </div>
-                <p className="text-xs line-clamp-2" style={{ color: '#71717a' }}>
+                <p className="text-xs line-clamp-2" style={{ color: '#94a3b8' }}>
                   {event.summary}
                 </p>
               </div>
-              <span className="text-[0.65rem] tabular-nums flex-shrink-0 mt-0.5" style={{ color: '#a1a1aa' }}>
+              <span className="text-[0.65rem] tabular-nums flex-shrink-0 mt-0.5" style={{ color: 'var(--muted-foreground)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
                 {timeAgo(event.created_at)}
               </span>
             </div>
